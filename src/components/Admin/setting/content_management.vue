@@ -12,11 +12,13 @@
       </div>
 
       <div id="categories" class="d-flex justify-content-between mt-4 align-items-center p-2 bg-white rounded shadow w-75 cursor-pointer content-btn">
+       <router-link to="/admin/categories" class="d-flex justify-content-between w-100 align-items-center">
         <div class="d-flex justify-content-start align-items-center">
           <span class="me-4"><i class="bi bi-tags-fill" style="color: #e51748; font-size: 40px"></i></span>
           <b class="fw-bold text-dark fs-5">Categories List</b>
         </div>
         <i class="bi bi-chevron-right" style="color: #010101; font-size: 40px"></i>
+        </router-link>
       </div>
 
       <div id="feature_products_kolshy" class="d-flex justify-content-between mt-4 align-items-center p-2 bg-white rounded shadow w-75 cursor-pointer content-btn">
@@ -35,44 +37,7 @@
         <i class="bi bi-chevron-right" style="color: #010101; font-size: 40px"></i>
       </div>
     </div>
-    <!-- Categories Section -->
-    <div class="p-4">
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2 class="d-flex">
-          <span class="me-4"><i class="bi bi-tags-fill" style="color: #e51748; font-size: 40px"></i></span>
-          Categories List
-        </h2>
-        <button class="btn text-light rounded-3 fw-bold" style="padding: 10px 25px; background: #e51748"><span class="me-1">+</span> Add New Category</button>
-      </div>
-      <div class="mt-4">
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col" v-for="hd in headers" :key="hd">{{ hd.text }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- <div v-if="categories.length === 0 || null" class="text-uppercase text-danger fw-bold text-center">Not Found Any Category Plz Add one</div> -->
-            <tr class="w-100">
-              <td>1</td>
-              <td>Apple Phone 12pro</td>
-              <td>Mobilre</td>
-              <td>32</td>
-              <td><input type="number" value="1" class="form-control w-50" /></td>
-              <td class="text-success fw-bold">203$</td>
-              <td class="d-flex justify-content-center align-items-center">
-                <span class="fs-4 cursor-pointer fw-bold" @click="showAction === true">...</span>
-                <div :class="{ 'd-block': showAction }" style="display: none">
-                  <v-btn class="bg-danger text-uppercase">Delete</v-btn>
-                  <v-btn class="bg-info text-uppercase">Update</v-btn>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+
   </div>
 </template>
 

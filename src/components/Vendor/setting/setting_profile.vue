@@ -48,6 +48,7 @@ export default {
         { icon: "bi bi-people", text: "Social Profile", subTitle: "Link your social accounts" },
         { icon: "bi bi-arrow-return-left", text: "Return and Warranty", subTitle: "Set return & warranty info" },
         { icon: "bi bi-globe", text: "Store SEO", subTitle: "Optimize for search engines" },
+        { icon: "bi bi-globe", text: "Login & Security", subTitle: "Update your name,email,phone", link: "/security" },
       ],
     };
   },

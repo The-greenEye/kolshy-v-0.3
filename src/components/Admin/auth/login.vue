@@ -23,7 +23,6 @@
                 </svg>
               </span>
             </div>
-            <small class="text-secondary fw-bold">Forget My <router-link to="/res_pass">Password?</router-link></small>
             <div class="d-flex flex-column justify-content-center align-items-center mb-4 mt-4">
               <button @click="submitForm()" class="btn rounded-3 d-flex justify-content-center align-items-center w-100 mb-2" style="background-color: #e51742; color: var(--text-color-secondary); font-weight: 700; font-size: 20px">
                 Sign In
@@ -44,10 +43,6 @@
               </button>
             </div>
           </form>
-          <div class="mt-4 d-flex justify-content-around align-items-center w-100">
-            <p class="text-center text-secondary mb-0" style="font-weight: 400">Don't have an account?</p>
-            <a href="./register" style="color: #e51742; text-decoration: underline; font-weight: 600">Create Account</a>
-          </div>
         </div>
       </div>
     </section>
@@ -82,10 +77,10 @@ export default {
         if (res_log_in.status === 200 || res_log_in.status === 201) {
           localStorage.setItem("tokenAdminKolshy", res_log_in.data.data.token);
           this.toast.success("Your Login Admin Successfully");
-          location.pathname = "/home";
+          location.pathname = "/admin";
         }
-      } catch {
-        this.toast.error("Error, You not have an account or, Your email/pass is wrong");
+      } catch(err) {
+        this.toast.error("Error, You not have an account or, Your email/pass is wrong", err);
       }
     },
   },

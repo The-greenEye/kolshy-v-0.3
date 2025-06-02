@@ -61,8 +61,8 @@
             <el-form-item label="Name" prop="Name">
               <el-input v-model="form.Name" placeholder="Name" />
             </el-form-item>
-            <el-form-item label="Email" prop="email_or_phone">
-              <el-input v-model="form.email_or_phone" placeholder="Email" type="email" />
+            <el-form-item label="Email" prop="email">
+              <el-input v-model="form.email" placeholder="Email" type="email" />
             </el-form-item>
             <el-form-item label="Password" prop="Password">
               <el-input v-model="form.Password" placeholder="Password" type="password" show-password />
@@ -151,7 +151,7 @@ export default {
 
     const form = reactive({
       Name: "",
-      email_or_phone: "",
+      email: "",
       Password: "",
       Password_confirmation: "",
       shopName: "",
@@ -168,7 +168,7 @@ export default {
 
     const rules = {
       Name: [{ required: true, message: "Please enter a valid name", trigger: "blur" }],
-      email_or_phone: [
+      email: [
         { required: true, message: "Please enter a valid email", trigger: "blur" },
         { type: "email", message: "Please enter a valid email", trigger: "blur" },
       ],
@@ -223,7 +223,7 @@ export default {
         }
         const userData = {
           name: form.Name,
-          email_or_phone: form.email_or_phone,
+          email: form.email,
           password: form.Password,
           password_confirmation: form.Password_confirmation,
           phone: form.phone,
@@ -233,6 +233,7 @@ export default {
           city: form.city,
           zip: form.ZIP,
           country: form.country,
+          phone: form.phone
         };
         try {
           const fullApi = api.baseUrl + api.endPoint.seller.auth.register;

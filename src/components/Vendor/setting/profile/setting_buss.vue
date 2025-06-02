@@ -21,7 +21,7 @@
         <p>
           Invite others to shop on behalf of the business. Multiple people can be managed with business-wide order reports and order approval workflows.
           <br />
-          <span class="alert-desc">We highly recommend adding at least one backup admin. If you leave the company for any reason, your entire company will lose access to the Amazon business account.</span>
+          <span class="alert-desc">We highly recommend adding at least one backup admin. If you leave the company for any reason, your entire company will lose access to the kolshy business account.</span>
         </p>
         <el-button type="wraning" class="alert-action-btn">Add users</el-button>
         <el-button type="wraning" class="alert-dismiss-btn">Dismiss</el-button>
@@ -77,7 +77,7 @@
           <!-- System Integrations -->
           <div class="buss-card">
             <h2>System integrations</h2>
-            <p>Connect Amazon Business with other purchasing, tracking, and/or financial programs you use.</p>
+            <p>Connect kolshy Business with other purchasing, tracking, and/or financial programs you use.</p>
             <div class="buss-links">
               <a href="#">Configure purchasing system</a>
               <a href="#">Domain verification</a>
@@ -85,7 +85,7 @@
               <a href="#">UNSPSC product classification</a>
               <a href="#">Single Sign-On (SSO)</a>
               <a href="#">App Center</a>
-              <a href="#">Amazon WorkDocs</a>
+              <a href="#">kolshy WorkDocs</a>
             </div>
           </div>
         </div>
@@ -105,7 +105,7 @@
           </div>
           <!-- Business Prime -->
           <div class="sidebar-card prime-card">
-            <img src="https://m.media-amazon.com/images/G/01/abn/prime/prime-badge._CB485945043_.png" alt="Prime" class="prime-img" />
+            <img src="https://m.media-kolshy.com/images/G/01/abn/prime/prime-badge._CB485945043_.png" alt="Prime" class="prime-img" />
             <div>
               <div class="prime-title">Enjoy fast, free shipping with Business Prime</div>
               <a href="#" class="prime-link">Register business Prime</a>

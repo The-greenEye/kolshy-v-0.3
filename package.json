@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@canvasjs/vue-charts": "^1.0.4",
+    "@element-plus/icons-vue": "^2.3.1",
     "@vuelidate/core": "^2.0.3",
     "@vuelidate/validators": "^2.0.4",
     "axios": "^1.9.0",

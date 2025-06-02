@@ -16,9 +16,13 @@
         </div>
 
         <div :class="{ 'd-none': showLoders }">
-          <v-skeleton-loader :loading="loading" type="list-item-two-line">
-            <v-list-item lines="two" subtitle="Subtitle" title="Title" rounded></v-list-item>
-          </v-skeleton-loader>
+          <el-skeleton />
+          <br />
+          <el-skeleton style="--el-skeleton-circle-size: 10px">
+            <div>
+              <el-skeleton-item variant="circle" />
+            </div>
+          </el-skeleton>
         </div>
 
         <form @submit.prevent class="text-start">
@@ -132,7 +136,7 @@ export default {
       const fullApi = this.api.baseUrl + this.api.endPoint.globel.profile.show_profile;
       const res = await axios.get(fullApi, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("tokenkolshy")}`,
+          Authorization: `Bearer ${localStorage.getItem("tokenkolshyvendor")}`,
         },
       });
 

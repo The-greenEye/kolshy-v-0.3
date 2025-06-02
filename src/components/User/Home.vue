@@ -4,35 +4,17 @@
       <div>
         <div style="height: 600px">
           <div id="carouselExampleControlsNoTouching overflow-y-hidden" class="carousel w-100 slide" data-bs-touch="false">
-            <div class="carousel-inner">
-              <div v-for="(slide, index) in sliderHome" :key="index" :class="['carousel-item', { active: index === 0 }]">
+            <el-carousel height="500px">
+              <el-carousel-item v-for="(slide, index) in sliderHome" :key="index">
                 <img :src="slide.image" class="d-block w-100" height="550" alt="Slider" />
-              </div>
-            </div>
-            <button class="carousel-control-prev opacity-0" type="button" data-bs-target="#carouselExampleControlsNoTouching" data-bs-slide="prev">
-              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-              <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next opacity-0" type="button" data-bs-target="#carouselExampleControlsNoTouching" data-bs-slide="next">
-              <span class="carousel-control-next-icon" aria-hidden="true"></span>
-              <span class="visually-hidden">Next</span>
-            </button>
+              </el-carousel-item>
+            </el-carousel>
           </div>
         </div>
       </div>
-    <button class="btn z-3 position-absolute start-0 translate-middle-y z-3" style="    top: 85%;
-    font-size: 80px;
-    background-color: #dbd8d870;
-    backdrop-filter: blur(6px);" @click="scrollLeft">
-      ‹
-    </button>
-    <button class="btn z-3 position-absolute end-0 translate-middle-y z-3" style="    top: 85%;
-    font-size: 80px;
-    background-color: #dbd8d870;
-    backdrop-filter: blur(6px);" @click="scrollRight">
-      ›
-    </button>
-      <div class="d-flex overflow-x-auto z-2 justify-content-start mb-4 align-items-center border-0 position-absolute w-100" style="backdrop-filter: blur(2px); top: 70%; padding: 10px 45px ">
+      <button class="btn z-3 position-absolute start-0 translate-middle-y z-3" style="top: 85%; font-size: 80px; background-color: #dbd8d870; backdrop-filter: blur(6px)" @click="scrollLeft">‹</button>
+      <button class="btn z-3 position-absolute end-0 translate-middle-y z-3" style="top: 85%; font-size: 80px; background-color: #dbd8d870; backdrop-filter: blur(6px)" @click="scrollRight">›</button>
+      <div class="d-flex overflow-x-auto z-2 justify-content-start mb-4 align-items-center border-0 position-absolute w-100" style="backdrop-filter: blur(2px); top: 70%; padding: 10px 45px">
         <div v-for="(serv, index) in servise" :key="index" class="d-flex flex-column m-2 justify-content-start p-4 bg-light border-0">
           <h4>{{ serv.text }}</h4>
           <div class="d-flex justify-content-start align-items">
@@ -46,7 +28,7 @@
       </div>
     </div>
     <div class="row p-3">
-      <div v-for="(block, blockIndex) in productHome[0].block_title" :key="blockIndex" style=" background-color: white" class="col d-flex flex-column justify-content-start rounded-0 border-0 m-2 box-show">
+      <div v-for="(block, blockIndex) in productHome[0].block_title" :key="blockIndex" style="background-color: white" class="col d-flex flex-column justify-content-start rounded-0 border-0 m-2 box-show">
         <h4 class="fw-bold mb-2">{{ block.title }}</h4>
 
         <div class="row justify-content-start">
@@ -64,7 +46,7 @@
     <div class="d-lg-flex p-4 d-none justify-content-start overflow-x-auto mb-4 align-items-start p-3 border w-100" style="height: 350px; background: white; scroll-snap-align: center">
       <div class="p-0 d-flex flex-column justify-content-start align-items-start cursor-pointer m-3" v-for="(sale, index) in mustSales" :key="index" style="max-width: 200px; min-width: 200px">
         <div>
-          <img :src="sale.image" width="200" height="120" alt="Product" />
+          <el-image style="width: 100px; height: 100px" :src="sale.image" :zoom-rate="1.2" :max-scale="7" :min-scale="0.2" :preview-src-list="srcList" show-progress :initial-index="4" fit="cover" />
         </div>
         <p class="fw-bold mt-2 text-truncate" :title="sale.title">{{ sale.title }}</p>
         <hr class="w-100" />
@@ -98,6 +80,7 @@ export default {
     return {
       showDec: ref(false),
       sliderHome: [{ image: "https://i.pinimg.com/736x/b9/dc/03/b9dc032fef51b3d8d0fedbf4bfc1cb2f.jpg" }, { image: "https://i.pinimg.com/originals/a5/43/0d/a5430d131e591c8ac612d13e7b9556f8.gif" }, { image: "https://i.pinimg.com/736x/06/aa/f4/06aaf4b866bb9f4db0c5eeef37bed7f1.jpg" }],
+      srcList: ["https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg", "https://fuss10.elemecdn.com/1/34/19aa98b1fcb2781c4fba33d850549jpeg.jpeg", "https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg", "https://fuss10.elemecdn.com/9/bb/e27858e973f5d7d3904835f46abbdjpeg.jpeg", "https://fuss10.elemecdn.com/d/e6/c4d93a3805b3ce3f323f7974e6f78jpeg.jpeg", "https://fuss10.elemecdn.com/3/28/bbf893f792f03a54408b3b7a7ebf0jpeg.jpeg", "https://fuss10.elemecdn.com/2/11/6535bcfb26e4c79b48ddde44f4b6fjpeg.jpeg"],
       productHome: [
         {
           block_title: [
@@ -237,9 +220,6 @@ export default {
   width: 0;
   opacity: 0;
 }
-body {
-  background-color: rgb(17, 17, 17);
-}
 .banar-home-slider1 {
   background-image: url("https://i.pinimg.com/736x/c7/3a/f7/c73af76a1a47e3e08bc2194eb2d82e03.jpg");
   background-repeat: no-repeat;
@@ -257,7 +237,7 @@ body {
 }
 @media (min-width: 800px) {
   .box-show {
-    width: 100%
+    width: 100%;
   }
 }
 </style>

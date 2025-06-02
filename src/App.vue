@@ -18,7 +18,9 @@ export default {
 </script>
 
 <style>
-
+body {
+  background-color: #101010
+}
 v-btn {
   cursor: pointer;
   background-color: #e51742;

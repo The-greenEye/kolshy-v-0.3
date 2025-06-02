@@ -20,6 +20,7 @@ import AddProductVendor from "../components/Vendor/setting/profile/add_products.
 // Admin routes
 import AdminLog from "../views/Admin/auth/LoginAdmin.vue";
 import HomeAdmin from "../views/Admin/HomeAdmin.vue";
+import categoriesAdmin from "../components/Admin/setting/addCategories.vue";
 
 const routes = [
   // User
@@ -101,6 +102,11 @@ const routes = [
     path: "/admin",
     name: "adminHome",
     component: HomeAdmin,
+  },
+  {
+    path: "/admin/categories",
+    name: "Add Categories",
+    component: categoriesAdmin,
   },
 ];
 

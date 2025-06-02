@@ -13,7 +13,7 @@ import router from "./router";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import CanvasJSChart from "@canvasjs/vue-charts";
-
+import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 // Create Vuetify instance
 const vuetify = createVuetify({
   components,
@@ -22,7 +22,9 @@ const vuetify = createVuetify({
 
 // Create Vue app and install plugins
 const app = createApp(App);
-
+for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+  app.component(key, component)
+}
 // Use plugins
 app.use(router);
 app.use(createPinia());

@@ -1,185 +1,187 @@
 <template>
-    <div>
-      <KolshyStyleHeader />
-      <div class="add-product-page">
-        <!-- Top Bar -->
-        <el-row class="top-bar" align="middle" justify="space-between">
-          <el-col :span="12" class="logo-search">
-            <el-input v-model="search" placeholder="Search for the products and information" class="search-input" />
-            <el-button type="primary" class="search-btn">Search</el-button>
+  <div>
+    <KolshyStyleHeader />
+    <el-loading :fullscreen="true" lock text="Loading..." v-if="isLoading" />
+
+    <div class="add-product-page" v-else>
+      <el-row class="top-bar" align="middle" justify="space-between">
+        <el-col :span="12" class="logo-search">
+          <el-input v-model="search" placeholder="Search for the products and information" class="search-input" />
+          <el-button type="primary" class="search-btn">Search</el-button>
+        </el-col>
+        <el-col :span="12" class="top-actions" style="text-align: right">
+          <el-button type="danger" @click="saveProduct"> <i class="bi bi-save me-4"></i> Save </el-button>
+        </el-col>
+      </el-row>
+
+      <el-divider />
+      <h2 class="section-title">{{ $route.query.id ? 'Edit Product' : 'Add New Product' }}</h2>
+
+      <el-form :model="form" label-width="120px" class="product-form" ref="productForm">
+        <el-row :gutter="20">
+          <el-col :xs="24" :md="16">
+            <el-form-item label="Category" required>
+              <el-select v-model="form.category_id" placeholder="Select a category">
+                <el-option v-for="cat in categories" :key="cat.id" :label="cat.name" :value="cat.id" />
+              </el-select>
+            </el-form-item>
+
+            <el-form-item label="Product Name (EN)" required>
+              <el-input v-model="form.name_en" />
+            </el-form-item>
+            <el-form-item label="Product Name (AR)" required>
+              <el-input v-model="form.name_ar" />
+            </el-form-item>
+
+            <el-row :gutter="10">
+              <el-col :xs="24" :sm="12">
+                <el-form-item label="Price" required>
+                  <el-input v-model="form.base_price" />
+                </el-form-item>
+              </el-col>
+              <el-col :xs="24" :sm="12">
+                <el-form-item label="Sale Price">
+                  <el-input v-model="form.base_sale" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+
+            <el-form-item label="Stock Quantity">
+              <el-input-number v-model="form.base_stock" :min="0" />
+            </el-form-item>
+
+            <el-form-item label="Warranty">
+              <el-input v-model="form.warranty" />
+            </el-form-item>
+
+            <el-form-item label="Description (EN)">
+              <el-input type="textarea" v-model="form.description_en" :rows="4" />
+            </el-form-item>
+            <el-form-item label="Description (AR)">
+              <el-input type="textarea" v-model="form.description_ar" :rows="4" />
+            </el-form-item>
+
+            <el-form-item label="About (EN)">
+              <el-input type="textarea" v-model="form.about_en" :rows="3" />
+            </el-form-item>
+            <el-form-item label="About (AR)">
+              <el-input type="textarea" v-model="form.about_ar" :rows="3" />
+            </el-form-item>
+
+            <el-card class="section-card" shadow="never">
+              <template #header><span><i class="bi bi-list-ul"></i> Specifications</span></template>
+              <div v-for="(item, index) in form.specifications" :key="index" class="attribute-row">
+                <el-input v-model="item.key" placeholder="Key" style="width: 30%" />
+                <el-input v-model="item.value" placeholder="Value" style="width: 60%" />
+                <el-button icon="el-icon-delete" circle @click="form.specifications.splice(index, 1)" />
+              </div>
+              <el-button type="primary" size="small" @click="form.specifications.push({ key: '', value: '' })">+ Add Specification</el-button>
+            </el-card>
+
+            <el-card class="section-card" shadow="never">
+              <template #header><span><i class="bi bi-card-text"></i> Details</span></template>
+              <div v-for="(item, index) in form.details" :key="index" class="attribute-row">
+                <el-input v-model="item.key" placeholder="Key" style="width: 30%" />
+                <el-input v-model="item.value" placeholder="Value" style="width: 60%" />
+                <el-button icon="el-icon-delete" circle @click="form.details.splice(index, 1)" />
+              </div>
+              <el-button type="primary" size="small" @click="form.details.push({ key: '', value: '' })">+ Add Detail</el-button>
+            </el-card>
+
+            <el-card class="section-card" shadow="never">
+              <template #header><span><i class="bi bi-grid-1x2-fill"></i> Pattern</span></template>
+              <div v-for="(item, index) in form.pattern" :key="index" class="attribute-row">
+                <el-input v-model="item.key" placeholder="Key" style="width: 30%" />
+                <el-input v-model="item.value" placeholder="Value" style="width: 60%" />
+                <el-button icon="el-icon-delete" circle @click="form.pattern.splice(index, 1)" />
+              </div>
+              <el-button type="primary" size="small" @click="form.pattern.push({ key: '', value: '' })">+ Add Pattern</el-button>
+            </el-card>
+
+            <el-card class="section-card" shadow="never">
+              <template #header><span><i class="bi bi-sliders"></i> Variants</span></template>
+              <div v-for="(variant, vIdx) in form.variants" :key="vIdx" class="mb-4">
+                <el-row :gutter="10">
+                  <el-col :span="8">
+                    <el-form-item label="Stock">
+                      <el-input-number v-model="variant.stock" :min="0" />
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="8">
+                    <el-form-item label="Price">
+                      <el-input v-model="variant.price" />
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="8">
+                    <el-form-item label="Sale">
+                      <el-input v-model="variant.sale" />
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+                <el-form-item label="Variant Image">
+                  <input type="file" @change="e => variant.image = e.target.files[0]" />
+                </el-form-item>
+                <div v-for="(option, oIdx) in variant.options" :key="oIdx" class="attribute-row">
+                  <el-input v-model="option.category_option_id" placeholder="Category Option ID" style="width: 30%" />
+                  <el-input v-model="option.value" placeholder="Value" style="width: 60%" />
+                </div>
+                <el-button icon="el-icon-delete" circle type="danger" @click="form.variants.splice(vIdx, 1)" />
+              </div>
+              <el-button type="primary" size="small" @click="form.variants.push({ stock: 0, price: '', sale: '', image: null, options: [] })">
+                + Add Variant
+              </el-button>
+            </el-card>
           </el-col>
-          <el-col :span="12" class="top-actions" style="text-align: right">
-            <el-button type="danger" @click="saveProduct"> <i class="bi bi-save me-4"></i> Save </el-button>
+
+          <el-col :xs="24" :md="8">
+            <el-card class="section-card" shadow="never">
+        <template #header>
+          <div class="d-flex justify-content-between align-items-center">
+            <span><i class="bi bi-image"></i> Product Images</span>
+            <el-button type="danger" size="small" @click="clearImages">Delete All Images</el-button>
+          </div>
+        </template>
+
+        <el-upload
+          class="upload-demo"
+          drag
+          action="#"
+          :show-file-list="false"
+          :before-upload="() => false"
+          :on-change="handleImageChange"
+          multiple
+        >
+          <i class="bi bi-upload" style="font-size: 2rem"></i>
+          <div class="el-upload__text">Drop files here or <em>click to upload</em></div>
+        </el-upload>
+
+        <div v-if="form.imageUrls.length" class="image-preview-grid">
+          <div
+            v-for="(url, i) in form.imageUrls"
+            :key="i"
+            class="image-preview-item"
+          >
+            <img @click="removeImage(i)" :src="url" class="product-image-preview" style="cursor: delete" />
+          </div>
+        </div>
+      </el-card>
+
+            <el-card class="section-card" shadow="never">
+              <template #header><span><i class="bi bi-toggle-on"></i> Status</span></template>
+              <el-form-item label="Status">
+                <el-radio-group v-model="form.status">
+                  <el-radio v-for="opt in statusOptions" :key="opt.value" :label="opt.value">{{ opt.label }}</el-radio>
+                </el-radio-group>
+              </el-form-item>
+            </el-card>
           </el-col>
         </el-row>
-  
-        <el-divider />
-  
-        <h2 class="section-title">Add New Product</h2>
-  
-        <el-form :model="form" label-width="120px" class="product-form" ref="productForm">
-          <el-row :gutter="20">
-            <el-col :xs="24" :md="16">
-              <!-- Product Name -->
-              <el-form-item label="Product Name (EN)" required>
-                <el-input v-model="form.name_en" placeholder="Enter product name in English" />
-              </el-form-item>
-              <el-form-item label="Product Name (AR)" required>
-                <el-input v-model="form.name_ar" placeholder="Enter product name in Arabic" />
-              </el-form-item>
-  
-              <!-- Price, Sale Price -->
-              <el-row :gutter="10">
-                <el-col :xs="24" :sm="12">
-                  <el-form-item label="Price" required>
-                    <el-input v-model="form.base_price" />
-                  </el-form-item>
-                </el-col>
-                <el-col :xs="24" :sm="12">
-                  <el-form-item label="Sale Price">
-                    <el-input v-model="form.base_sale" />
-                  </el-form-item>
-                </el-col>
-              </el-row>
-  
-              <!-- Stock -->
-              <el-form-item label="Stock Quantity">
-                <el-input-number v-model="form.base_stock" :min="0" />
-              </el-form-item>
-  
-              <!-- Warranty -->
-              <el-form-item label="Warranty">
-                <el-input v-model="form.warranty" />
-              </el-form-item>
-  
-              <!-- Description -->
-              <el-form-item label="Description (EN)">
-                <el-input type="textarea" v-model="form.description_en" :rows="4" />
-              </el-form-item>
-              <el-form-item label="Description (AR)">
-                <el-input type="textarea" v-model="form.description_ar" :rows="4" />
-              </el-form-item>
-  
-              <!-- About -->
-              <el-form-item label="About (EN)">
-                <el-input type="textarea" v-model="form.about_en" :rows="3" />
-              </el-form-item>
-              <el-form-item label="About (AR)">
-                <el-input type="textarea" v-model="form.about_ar" :rows="3" />
-              </el-form-item>
-  
-              <!-- Specifications -->
-              <el-card class="section-card" shadow="never">
-                <div slot="header">
-                  <span><i class="bi bi-list-ul"></i> Specifications</span>
-                </div>
-                <div v-for="(item, index) in form.specifications" :key="'spec-'+index" class="attribute-row">
-                  <el-input v-model="item.key" placeholder="Key" style="width: 30%" />
-                  <el-input v-model="item.value" placeholder="Value" style="width: 60%" />
-                </div>
-              </el-card>
-  
-              <!-- Details -->
-              <el-card class="section-card" shadow="never">
-                <div slot="header">
-                  <span><i class="bi bi-card-text"></i> Details</span>
-                </div>
-                <div v-for="(item, index) in form.details" :key="'detail-'+index" class="attribute-row">
-                  <el-input v-model="item.key" placeholder="Key" style="width: 30%" />
-                  <el-input v-model="item.value" placeholder="Value" style="width: 60%" />
-                </div>
-              </el-card>
-  
-              <!-- Pattern -->
-              <el-card class="section-card" shadow="never">
-                <div slot="header">
-                  <span><i class="bi bi-grid-1x2-fill"></i> Pattern</span>
-                </div>
-                <div v-for="(item, index) in form.pattern" :key="'pattern-'+index" class="attribute-row">
-                  <el-input v-model="item.key" placeholder="Key" style="width: 30%" />
-                  <el-input v-model="item.value" placeholder="Value" style="width: 60%" />
-                </div>
-              </el-card>
-  
-              <!-- Variants -->
-              <el-card class="section-card" shadow="never">
-                <div slot="header">
-                  <span><i class="bi bi-sliders"></i> Variants</span>
-                </div>
-                <div v-for="(variant, vIdx) in form.variants" :key="'variant-'+vIdx" class="mb-4">
-                  <el-row :gutter="10">
-                    <el-col :span="8">
-                      <el-form-item label="Stock">
-                        <el-input-number v-model="variant.stock" :min="0" />
-                      </el-form-item>
-                    </el-col>
-                    <el-col :span="8">
-                      <el-form-item label="Price">
-                        <el-input v-model="variant.price" />
-                      </el-form-item>
-                    </el-col>
-                    <el-col :span="8">
-                      <el-form-item label="Sale">
-                        <el-input v-model="variant.sale" />
-                      </el-form-item>
-                    </el-col>
-                  </el-row>
-  
-                  <el-form-item label="Variant Image">
-                    <input type="file" @change="(e) => variant.image = e.target.files[0]" />
-                  </el-form-item>
-  
-                  <div v-for="(option, oIdx) in variant.options" :key="`option-${vIdx}-${oIdx}`" class="attribute-row">
-                    <el-input v-model="option.category_option_id" placeholder="Category Option ID" style="width: 30%" />
-                    <el-input v-model="option.value" placeholder="Value" style="width: 60%" />
-                  </div>
-                </div>
-              </el-card>
-            </el-col>
-  
-            <!-- Image Upload -->
-            <el-col :xs="24" :md="8">
-              <el-card class="section-card" shadow="never">
-                <div slot="header"><span><i class="bi bi-image"></i> Product Images</span></div>
-                <el-upload
-                  class="upload-demo"
-                  drag
-                  action="#"
-                  :show-file-list="false"
-                  :on-change="handleImageChange"
-                  multiple
-                >
-                  <i class="bi bi-upload" style="font-size: 2rem"></i>
-                  <div class="el-upload__text">Drop files here or <em>click to upload</em></div>
-                </el-upload>
-                <div v-if="form.imageUrl">
-                  <img :src="form.imageUrl" class="product-image-preview" />
-                </div>
-              </el-card>
-  
-              <!-- Status -->
-              <el-card class="section-card" shadow="never">
-                <div slot="header"><span><i class="bi bi-toggle-on"></i> Status</span></div>
-                <el-form-item label="Status">
-                  <el-radio-group v-model="form.status">
-                    <el-radio label="draft">Draft</el-radio>
-                    <el-radio label="published">Published</el-radio>
-                  </el-radio-group>
-                </el-form-item>
-              </el-card>
-            </el-col>
-          </el-row>
-  
-          <!-- Save Button -->
-          <el-row justify="end" style="margin-top: 24px">
-            <el-button type="danger" size="large" @click="saveProduct"> <i class="bi bi-save me-4"></i> Save Product </el-button>
-          </el-row>
-        </el-form>
-      </div>
-      <footerC />
+      </el-form>
     </div>
-  </template>
-  
+    <footerC />
+  </div>
+</template>
+
 <script>
 import KolshyStyleHeader from "@/components/Global/topBar";
 import footerC from "@/components/Global/footer";
@@ -189,149 +191,180 @@ import { useToast } from "vue-toastification";
 
 export default {
   name: "AddProductVendor",
-  components: {
-    KolshyStyleHeader,
-    footerC,
-  },
+  components: { KolshyStyleHeader, footerC },
   data() {
     return {
       search: "",
+      categories: [],
+      statusOptions: [],
+      isLoading: false,
       form: {
-        category_id: 1,
-        name_en: "Sample Product EN",
-        name_ar: "منتج تجريبي AR",
-        description_en: "This is the English description.",
-        description_ar: "هذا هو الوصف باللغة العربية.",
-        about_en: "About the product in English.",
-        about_ar: "حول المنتج باللغة العربية.",
-        base_price: "100.00",
-        base_sale: "80.00",
-        base_stock: 20,
-        status: "published", // or "draft"
-        warranty: "12 months",
-
-        // Must be File objects (from file inputs)
+        category_id: "",
+        name_en: "",
+        name_ar: "",
+        description_en: "",
+        description_ar: "",
+        about_en: "",
+        about_ar: "",
+        base_price: "",
+        base_sale: "",
+        base_stock: 0,
+        status: "1",
+        warranty: "",
         images: [],
-
-        specifications: [
-          { key: "Material", value: "Cotton" },
-          { key: "Size", value: "Large" },
-        ],
-
-        details: [
-          { key: "Country", value: "Turkey" },
-          { key: "Brand", value: "Kolshy" },
-        ],
-
-        pattern: [
-          { key: "Color", value: "Red" },
-          { key: "Style", value: "Casual" },
-        ],
-
-        variants: [
-          {
-            stock: 10,
-            price: "100.00",
-            sale: "90.00",
-            image: null, // Single File
-            options: [
-              { category_option_id: 1, value: "Red" },
-              { category_option_id: 2, value: "L" },
-            ],
-          },
-        ],
+        imageUrls: [],
+        specifications: [],
+        details: [],
+        pattern: [],
+        variants: []
       },
+      toast: useToast(),
+      storeApp: useStoreApp(),
     };
   },
-  setup() {
-    const toast = useToast();
-    const storeApp = useStoreApp();
-    return { toast, storeApp };
+  created() {
+    this.fetchFormOptions();
+    const id = this.$route.query.id;
+    if (id) {
+      this.loadProduct(id);
+    }
   },
   methods: {
-    addAttribute() {
-      this.form.attributes.push({ name: "", value: "" });
+    async fetchFormOptions() {
+      try {
+        const token = localStorage.getItem("tokenkolshyvendor");
+        const response = await axios.get(`${this.storeApp.baseUrl}seller/products/form-data`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const { categories, status } = response.data.data;
+        this.categories = categories;
+        this.statusOptions = Object.entries(status).map(([value, label]) => ({ value, label }));
+      } catch (err) {
+        this.toast.error("Failed to load product form data");
+      }
     },
-    removeAttribute(index) {
-      this.form.attributes.splice(index, 1);
+    async loadProduct(id) {
+      this.isLoading = true;
+      try {
+        const token = localStorage.getItem("tokenkolshyvendor");
+        const res = await axios.get(`${this.storeApp.baseUrl}seller/products/${id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const data = res.data.data;
+
+        this.form.category_id = data.category_id;
+        this.form.name_en = data.name.en;
+        this.form.name_ar = data.name.ar;
+        this.form.description_en = data.description.en;
+        this.form.description_ar = data.description.ar;
+        this.form.about_en = data.about.en;
+        this.form.about_ar = data.about.ar;
+        this.form.base_price = data.base_price;
+        this.form.base_sale = data.base_sale;
+        this.form.base_stock = data.base_stock;
+        this.form.status = data.status.toString();
+        this.form.warranty = data.warranty;
+        this.form.imageUrls = data.images || [];
+        this.form.specifications = data.specifications || [];
+        this.form.details = data.details || [];
+        this.form.pattern = data.pattern || [];
+        this.form.variants = data.variants || [];
+      } catch (err) {
+        this.toast.error('Failed to load product data');
+      } finally {
+        this.isLoading = false;
+      }
     },
     handleImageChange(file) {
-      this.form.imageUrl = URL.createObjectURL(file.raw);
+      if (!file || !file.raw) {
+        this.toast.error("Invalid image file");
+        return;
+      }
+      this.form.images.push(file.raw);
+      this.form.imageUrls.push(URL.createObjectURL(file.raw));
+    },
+    removeImage(index) {
+      this.form.imageUrls.splice(index, 1);
+      this.form.images.splice(index, 1);
+    },
+    clearImages() {
+      this.form.imageUrls = [];
+      this.form.images = [];
     },
     async saveProduct() {
+      this.isLoading = true;
       try {
         const formData = new FormData();
+        const f = this.form;
 
-        // Required fields
-        formData.append("category_id", this.form.category_id);
-        formData.append("name[en]", this.form.name_en);
-        formData.append("name[ar]", this.form.name_ar);
-        formData.append("description[en]", this.form.description_en);
-        formData.append("description[ar]", this.form.description_ar);
-        formData.append("about[en]", this.form.about_en);
-        formData.append("about[ar]", this.form.about_ar);
-        formData.append("base_price", this.form.base_price);
-        formData.append("base_sale", this.form.base_sale);
-        formData.append("base_stock", this.form.base_stock);
-        formData.append("status", this.form.status);
-        formData.append("warranty", this.form.warranty);
+        formData.append("category_id", f.category_id);
+        formData.append("name[en]", f.name_en);
+        formData.append("name[ar]", f.name_ar);
+        formData.append("description[en]", f.description_en);
+        formData.append("description[ar]", f.description_ar);
+        formData.append("about[en]", f.about_en);
+        formData.append("about[ar]", f.about_ar);
+        formData.append("base_price", f.base_price);
+        formData.append("base_sale", f.base_sale);
+        formData.append("base_stock", f.base_stock);
+        formData.append("status", f.status);
+        formData.append("warranty", f.warranty);
 
-        // Images
-        this.form.images.forEach((file) => {
-          formData.append("images[]", file);
+        f.images.forEach(img => formData.append("images[]", img));
+
+        f.specifications.forEach((s, i) => {
+          formData.append(`specifications[${i}][key]`, s.key);
+          formData.append(`specifications[${i}][value]`, s.value);
         });
-
-        // Specifications
-        this.form.specifications.forEach((spec, i) => {
-          formData.append(`specifications[${i}][key]`, spec.key);
-          formData.append(`specifications[${i}][value]`, spec.value);
+        f.details.forEach((d, i) => {
+          formData.append(`details[${i}][key]`, d.key);
+          formData.append(`details[${i}][value]`, d.value);
         });
-
-        // Details
-        this.form.details.forEach((detail, i) => {
-          formData.append(`details[${i}][key]`, detail.key);
-          formData.append(`details[${i}][value]`, detail.value);
-        });
-
-        // Pattern
-        this.form.pattern.forEach((p, i) => {
+        f.pattern.forEach((p, i) => {
           formData.append(`pattern[${i}][key]`, p.key);
           formData.append(`pattern[${i}][value]`, p.value);
         });
 
-        // Variants
-        this.form.variants.forEach((variant, i) => {
-          formData.append(`variants[${i}][stock]`, variant.stock);
-          formData.append(`variants[${i}][price]`, variant.price);
-          formData.append(`variants[${i}][sale]`, variant.sale);
-          formData.append(`variants[${i}][image]`, variant.image);
-
-          variant.options.forEach((opt, j) => {
+        f.variants.forEach((v, i) => {
+          formData.append(`variants[${i}][stock]`, v.stock);
+          formData.append(`variants[${i}][price]`, v.price);
+          formData.append(`variants[${i}][sale]`, v.sale);
+          if (v.image) formData.append(`variants[${i}][image]`, v.image);
+          v.options.forEach((opt, j) => {
             formData.append(`variants[${i}][options][${j}][category_option_id]`, opt.category_option_id);
             formData.append(`variants[${i}][options][${j}][value]`, opt.value);
           });
         });
 
         const token = localStorage.getItem("tokenkolshyvendor");
-        const url = this.storeApp.baseUrl;
+        const id = this.$route.query.id;
+        let url = `${this.storeApp.baseUrl}seller/products`;
 
-        const response = await axios.post(`${url}seller/products`, formData, {
+        if (id) {
+          formData.append("_method", "PUT");
+          url += `/${id}`;
+        }
+
+        const response = await axios.post(url, formData, {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "multipart/form-data",
           },
         });
 
-        this.toast.success("Product created successfully!");
-        console.log(response.data);
+        this.toast.success(id ? "Product updated successfully!" : "Product created successfully!");
       } catch (err) {
-        this.toast.error("Failed to create product.");
-        console.error("Product Create Error:", err);
+        console.error("Product Save Error:", err);
+        this.toast.error("Failed to save product.");
+      } finally {
+        this.isLoading = false;
       }
-    },
+    }
   },
 };
 </script>
+
+
 
 <style scoped>
 .add-product-page {
@@ -341,11 +374,6 @@ export default {
 }
 .top-bar {
   margin-bottom: 16px;
-}
-.logo {
-  height: 40px;
-  margin-right: 16px;
-  vertical-align: middle;
 }
 .logo-search {
   display: flex;
