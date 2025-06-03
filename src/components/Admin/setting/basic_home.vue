@@ -97,7 +97,7 @@
       </div>
     </section>
 
-    <section class="p-4">
+    <section class="p-4 d-lg-block d-none">
       <div class="bg-white p-2 rounded shadow-lg">
         <h4 class="mt-4 mb-5">Recent Activities</h4>
         <div class="p-4 row overflow-y-auto">

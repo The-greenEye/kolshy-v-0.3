@@ -319,7 +319,7 @@ export default {
     padding: 2rem 1.5rem 1.5rem 1.5rem;
     box-shadow: -2px 0 16px rgba(0, 0, 0, 0.15);
     z-index: 1050;
-    overflow-y: auto;
+    overflow-y: scroll;
     transition: all 0.4s cubic-bezier(0.77, 0, 0.18, 1);
     display: flex;
     flex-direction: column;
