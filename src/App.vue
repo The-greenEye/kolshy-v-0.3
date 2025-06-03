@@ -19,7 +19,7 @@ export default {
 
 <style>
 body {
-  background-color: #101010
+  background-color: #f3eeee;
 }
 v-btn {
   cursor: pointer;
