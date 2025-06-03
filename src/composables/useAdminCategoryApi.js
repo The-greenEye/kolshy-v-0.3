@@ -1,5 +1,6 @@
 // src/composables/useAdminCategoryApi.js
 import axios from "axios";
+
 const token = localStorage.getItem("tokenAdminKolshy"); // adjust based on your storage
 
 const api = axios.create({
@@ -10,6 +11,8 @@ const api = axios.create({
 });
 
 export function useAdminCategoryApi() {
+  // CATEGORY API
+
   const getCategories = (page = 1, perPage = 10) => {
     return api.get(`/admin/categories?page=${page}&per_page=${perPage}`);
   };
@@ -28,6 +31,7 @@ export function useAdminCategoryApi() {
   };
 
   return {
+    // categories
     getCategories,
     createCategory,
     updateCategory,

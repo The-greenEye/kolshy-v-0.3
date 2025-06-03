@@ -21,6 +21,7 @@ import AddProductVendor from "../components/Vendor/setting/profile/add_products.
 import AdminLog from "../views/Admin/auth/LoginAdmin.vue";
 import HomeAdmin from "../views/Admin/HomeAdmin.vue";
 import categoriesAdmin from "../components/Admin/setting/addCategories.vue";
+import collectionsAdmin from "../components/Admin/setting/collections.vue";
 
 const routes = [
   // User
@@ -107,6 +108,11 @@ const routes = [
     path: "/admin/categories",
     name: "Add Categories",
     component: categoriesAdmin,
+  },
+  {
+    path: "/admin/collections",
+    name: "Add Collections",
+    component: collectionsAdmin,
   },
 ];
 
