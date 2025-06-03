@@ -55,7 +55,17 @@
     <!-- Sidebar Form -->
     <transition name="sidebar-slide">
       <div v-if="showCollectionSidebar" class="collection-sidebar">
-        <h4 class="fw-bold text-primary mb-3">{{ editingId ? 'Edit Collection' : 'Add New Collection' }}</h4>
+        <h4 class="fw-bold text-primary mb-3 d-flex justify-content-between">
+          {{ editingId ? 'Edit Collection' : 'Add New Collection' }}
+          <el-row :gutter="12" class="mt-4">
+            <el-col :xs="12">
+              <el-button @click="cancelForm" type="primary" plain class="w-100">Cancel</el-button>
+            </el-col>
+            <el-col :xs="12">
+              <el-button type="primary" @click="submitForm" class="w-100">{{ editingId ? 'Update' : 'Add' }}</el-button>
+            </el-col>
+          </el-row>
+        </h4>
         <el-form label-position="top">
           <el-form-item label="Collection Name (English)">
             <el-input v-model="form.name" placeholder="Enter name in English" />
@@ -82,14 +92,6 @@
               <img :src="form.thumbnailUrl" alt="Preview" style="max-width: 100%; max-height: 120px; border-radius: 8px" />
             </div>
           </el-form-item>
-          <el-row :gutter="12" class="mt-4">
-            <el-col :xs="12">
-              <el-button @click="cancelForm" type="primary" plain class="w-100">Cancel</el-button>
-            </el-col>
-            <el-col :xs="12">
-              <el-button type="primary" @click="submitForm" class="w-100">{{ editingId ? 'Update' : 'Add' }}</el-button>
-            </el-col>
-          </el-row>
         </el-form>
       </div>
     </transition>
