@@ -4,8 +4,18 @@
     <div class="otp-container bg-light" :class="{ 'otp-active': showOtp }">
       <h2 class="otp-title">Verify Your Account</h2>
       <div class="otp-inputs">
-        <input v-for="i in 6" :key="i" v-model="otp[i - 1]" @input="handleOtpInput($event, i - 1)" @keydown.delete="handleOtpDelete($event, i - 1)" ref="otpInputs" type="text" maxlength="1" class="otp-input" />
-      </div>
+  <input
+    v-model="otp"
+    type="text"
+    maxlength="6"
+    class="otp-input"
+    autocomplete="one-time-code"
+    inputmode="numeric"
+    pattern="[0-9]*"
+    @input="handleOtpInput"
+    placeholder="Enter 6-digit code"
+  />
+</div>
       <div class="otp-actions">
         <button @click="submitOtp" class="btn btn-verify">Verify</button>
         <button @click="resendOtp" class="btn btn-resend">Resend Code</button>
@@ -22,30 +32,30 @@
           </center>
           <h1 class="fs-1 fw-bold mt-4" style="color: #000336">Create Costumer Account</h1>
           <form method="post" class="w-100 p-0" @submit.prevent="sendForm()">
-            <small v-if="v$.Name.$error" style="font-size: 12px; font-weight: bold; color: red">Please enter a valid name</small>
+            <small v-if="v$.Name.$error && v$.Name.$dirty" style="font-size: 12px; font-weight: bold; color: red">Please enter a valid name</small>
             <div style="border: none; border-bottom: 1px solid #e51742" class="input-group w-100 justify-content-between align-items-end mb-0">
               <input type="text" name="name" id="name" v-model="Name" class="bg-transparent w-75 p-2" style="border: none; outline: none; font-weight: 500" placeholder="Name" aria-label="Name" @blur="v$.Name.$touch()" required />
             </div>
             <small style="font-size: 12px; font-weight: bold; color: gray">Just use [A,Z,a,z,1,9,@]</small>
 
-            <small v-if="v$.Email.$error" style="font-size: 12px; font-weight: bold; color: red">Please enter a valid email</small>
+            <small v-if="v$.Email.$error && v$.Email.$dirty" style="font-size: 12px; font-weight: bold; color: red">Please enter a valid email</small>
             <div style="border: none; border-bottom: 1px solid #e51742" class="input-group w-100 justify-content-between align-items-end mb-4 mt-4">
               <input type="email" class="bg-transparent w-75 p-2" v-model="Email" style="border: none; outline: none; font-weight: 500" placeholder="Email" aria-label="Email" @blur="v$.Email.$touch()" required />
             </div>
 
-            <small v-if="v$.Password.$error" style="font-size: 12px; font-weight: bold; color: red">Password must be at least 6 characters</small>
+            <small v-if="v$.Password.$error && v$.Password.$dirty" style="font-size: 12px; font-weight: bold; color: red">Password must be at least 6 characters</small>
             <div style="border: none; border-bottom: 1px solid #e51742" class="input-group w-100 justify-content-between align-items-end mb-0">
               <input type="password" class="bg-transparent w-75 p-2" v-model="Password" style="border: none; outline: none; font-weight: 500" placeholder="Password" aria-label="Password" @blur="v$.Password.$touch()" required />
             </div>
             <small style="font-size: 12px; font-weight: bold; color: gray">must use at least 6 characters</small>
 
-            <small v-if="v$.Password_confirmation.$error" style="font-size: 12px; font-weight: bold; color: red">Passwords do not match</small>
+            <small v-if="v$.Password_confirmation.$error && v$.Password_confirmation.$dirty" style="font-size: 12px; font-weight: bold; color: red">Passwords do not match</small>
             <div style="border: none; border-bottom: 1px solid #e51742" class="input-group w-100 justify-content-between align-items-end mb-4 mt-4">
               <input type="password" class="bg-transparent w-75 p-2" v-model="Password_confirmation" style="border: none; outline: none; font-weight: 500" placeholder="Confirm Your Password" aria-label="Confirm Password" @blur="v$.Password_confirmation.$touch()" required />
             </div>
 
             <div class="d-flex flex-column justify-content-center align-items-center mb-4">
-              <button type="submit" class="btn rounded-3 d-flex justify-content-center align-items-center w-100 mb-2" style="background-color: #e51742; color: var(--text-color-secondary); font-weight: 700; font-size: 20px" :disabled="v$.$invalid">
+              <button type="submit" class="btn rounded-3 d-flex justify-content-center align-items-center w-100 mb-2" style="background-color: #e51742; color: var(--text-color-secondary); font-weight: 700; font-size: 20px" :disabled="v$.$invalid || isSubmitting">
                 Create Account
                 <span class="ml-2 mt-2">
                   <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 24 24">
@@ -100,7 +110,7 @@ import { useVuelidate } from "@vuelidate/core";
 import { required, email, minLength, sameAs } from "@vuelidate/validators";
 import axios from "axios";
 import { useToast } from "vue-toastification";
-import { useStoreApp } from "../../../stores/app";
+import { useStoreApp, useStoreCustomer } from "@/stores/app";
 import { useRouter } from "vue-router";
 
 export default {
@@ -110,6 +120,7 @@ export default {
       v$: useVuelidate(),
       toast: useToast(),
       api: useStoreApp(),
+      customer: useStoreCustomer(),
       router: useRouter(),
     };
   },
@@ -120,7 +131,7 @@ export default {
       Email: "",
       Password: "",
       Password_confirmation: "",
-      otp: Array(6).fill(""),
+      otp: '',
       feedbackMessage: "",
       feedbackClass: "",
       otpRequested: false,
@@ -169,8 +180,10 @@ export default {
 
         if ([200, 201].includes(response.status)) {
           const token = response.data.data.token;
-          localStorage.setItem("tokenkolshy", token);
-
+          this.customer.token = token;
+          this.customer.token = response.data.data;
+          console.log(this.customer.token);
+          console.log(this.customer.data);
           if (!this.otpRequested) {
             const fullApi2 = this.api.baseUrl + this.api.endPoint.globel.auth.verify.get_otp;
             await axios.get(fullApi2, {
@@ -181,6 +194,11 @@ export default {
             this.otpRequested = true;
             this.showOtp = true;
             this.toast.success("OTP sent successfully!");
+            this.$nextTick(() => {
+              if (this.$refs.otpInputs && this.$refs.otpInputs[0]) {
+                this.$refs.otpInputs[0].focus();
+              }
+            });
           }
         }
       } catch (error) {
@@ -190,32 +208,26 @@ export default {
       }
     },
 
-    handleOtpInput(event, index) {
-      const value = event.target.value.replace(/\D/g, "");
-      this.otp[index] = value ? value.slice(-1) : "";
+    handleOtpInput(event) {
+  // Only allow numeric and max 6 digits
+  let value = event.target.value.replace(/\D/g, '');
+  if (value.length > 6) value = value.slice(0, 6);
+  this.otp = value;
+},
 
-      if (value && index < 5) {
-        this.$refs.otpInputs[index + 1]?.focus();
-      }
-    },
+    // No longer needed for single input OTP
 
-    handleOtpDelete(event, index) {
-      if (event.key === "Backspace" && !this.otp[index] && index > 0) {
-        this.otp[index - 1] = "";
-        this.$refs.otpInputs[index - 1]?.focus();
-      }
-    },
 
     async submitOtp() {
       if (this.isVerifying) return;
       this.isVerifying = true;
-      const otpCode = this.otp.join("");
+      const otpCode = this.otp;
 
       if (otpCode.length !== 6) {
-        this.toast.warning("Please enter the complete 6-digit code");
-        this.isVerifying = false;
-        return;
-      }
+  this.toast.warning("Please enter the complete 6-digit code");
+  this.isVerifying = false;
+  return;
+}
 
       try {
         const fullApi = this.api.baseUrl + this.api.endPoint.globel.auth.verify.verify_otp;
@@ -227,14 +239,14 @@ export default {
           },
           {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem("tokenkolshy")}`,
+              Authorization: `Bearer ${this.customer.token}`,
             },
           }
         );
 
         if ([200, 201].includes(verificationResponse.status)) {
           this.toast.success("Account verified successfully!");
-          this.router.push("/");
+          this.router.push("/login");
         }
       } catch (error) {
         this.handleApiError(error, "verification");
@@ -251,12 +263,17 @@ export default {
         const fullApi = this.api.baseUrl + this.api.endPoint.globel.auth.verify.get_otp;
         await axios.get(fullApi, {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("tokenkolshy")}`,
+            Authorization: `Bearer ${this.customer.token}`,
           },
         });
 
         this.toast.success("New OTP sent successfully!");
-        this.otp = Array(6).fill("");
+        this.otp = '';
+        this.otp(() => {
+          if (this.otpInputs && this.otpInputs[0]) {
+            this.otpInputs[0].focus();
+          }
+        });
         this.feedbackClass = "feedback-success";
         this.feedbackMessage = "New code sent!";
       } catch (error) {

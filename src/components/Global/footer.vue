@@ -16,13 +16,13 @@
               <b>Get To Know Us</b>
               <ul class="navbar-nav">
                 <li class="nav-item">
-                  <router-link to="" class="nav-link text-light">About Kolshy</router-link>
+                  <router-link to="/" class="nav-link text-light">About Kolshy</router-link>
                 </li>
                 <li class="nav-item">
-                  <router-link to="" class="nav-link text-light">Careers</router-link>
+                  <router-link to="/" class="nav-link text-light">Careers</router-link>
                 </li>
                 <li class="nav-item">
-                  <router-link to="" class="nav-link text-light">Kolshy Sence</router-link>
+                  <router-link to="/" class="nav-link text-light">Kolshy Sence</router-link>
                 </li>
               </ul>
             </div>
@@ -30,16 +30,16 @@
               <b>Shop With Us</b>
               <ul class="navbar-nav">
                 <li class="nav-item">
-                  <router-link to="" class="nav-link text-light">Your Account</router-link>
+                  <router-link to="/setting" class="nav-link text-light">Your Account</router-link>
                 </li>
                 <li class="nav-item">
-                  <router-link to="" class="nav-link text-light">Your orders</router-link>
+                  <router-link to="/vendor_orders" class="nav-link text-light">Your orders</router-link>
                 </li>
                 <li class="nav-item">
-                  <router-link to="" class="nav-link text-light">Your Addresses</router-link>
+                  <router-link to="/setting/addresses" class="nav-link text-light">Your Addresses</router-link>
                 </li>
                 <li class="nav-item">
-                  <router-link to="" class="nav-link text-light">Your Lists</router-link>
+                  <router-link to="/" class="nav-link text-light">Your Lists</router-link>
                 </li>
               </ul>
             </div>
@@ -47,16 +47,16 @@
               <b>Make Monay With Us</b>
               <ul class="navbar-nav">
                 <li class="nav-item">
-                  <router-link to="" class="nav-link text-light">Protect and build your brand</router-link>
+                  <router-link to="/register_seller" class="nav-link text-light">Protect and build your brand</router-link>
                 </li>
                 <li class="nav-item">
-                  <router-link to="" class="nav-link text-light">Sell on Kolshy</router-link>
+                  <router-link to="/register_seller" class="nav-link text-light">Sell on Kolshy</router-link>
                 </li>
                 <li class="nav-item">
-                  <router-link to="" class="nav-link text-light">Fulfillment by Kolshy</router-link>
+                  <router-link to="/vendor_dashboard" class="nav-link text-light">Fulfillment by Kolshy</router-link>
                 </li>
                 <li class="nav-item">
-                  <router-link to="" class="nav-link text-light">Advertise Your Products</router-link>
+                  <router-link to="/vendor_product" class="nav-link text-light">Advertise Your Products</router-link>
                 </li>
               </ul>
             </div>
@@ -64,16 +64,16 @@
               <b>Let Us Help You</b>
               <ul class="navbar-nav">
                 <li class="nav-item">
-                  <router-link to="" class="nav-link text-light">Help</router-link>
+                  <router-link to="/customer-service" class="nav-link text-light">Help</router-link>
                 </li>
                 <li class="nav-item">
-                  <router-link to="" class="nav-link text-light">Shipping & Delivery</router-link>
+                  <router-link to="/" class="nav-link text-light">Shipping & Delivery</router-link>
                 </li>
                 <li class="nav-item">
-                  <router-link to="" class="nav-link text-light">Returns & Replacements</router-link>
+                  <router-link to="/" class="nav-link text-light">Returns & Replacements</router-link>
                 </li>
                 <li class="nav-item">
-                  <router-link to="" class="nav-link text-light">Recalls and Product Safety Alerts</router-link>
+                  <router-link to="/" class="nav-link text-light">Recalls and Product Safety Alerts</router-link>
                 </li>
               </ul>
             </div>

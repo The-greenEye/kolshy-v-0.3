@@ -5,6 +5,9 @@ import HomeView from "../views/HomeView.vue";
 import ForgetPass from "../views/Global/ForgetPass.vue";
 import SigninView from "../views/User/auth/LoginView.vue";
 import Register from "../views/User/auth/RegisterView.vue";
+import CustomerSetting from "../views/User/setting/BasiceSetting.vue";
+import CustomerAddressList from "../components/User/setting/addAddress.vue";
+import ProfileCustomer from "../components/User/setting/profile.vue";
 
 // Vendor routes
 import RegisterSeller from "../components/Vendor/auth/registerSeller.vue";
@@ -22,6 +25,13 @@ import AdminLog from "../views/Admin/auth/LoginAdmin.vue";
 import HomeAdmin from "../views/Admin/HomeAdmin.vue";
 import categoriesAdmin from "../components/Admin/setting/addCategories.vue";
 import collectionsAdmin from "../components/Admin/setting/collections.vue";
+
+// Affiliate system
+import AffiliateDashboard from '../components/Marketing/AffiliateDashboard.vue';
+import AffiliateLinks from '../components/Marketing/AffiliateLinks.vue';
+import AffiliateStats from '../components/Marketing/AffiliateStats.vue';
+import AffiliateSettings from '../components/Marketing/AffiliateSettings.vue';
+import AffiliateNotifications from '../components/Marketing/AffiliateNotifications.vue';
 
 const routes = [
   // User
@@ -44,6 +54,21 @@ const routes = [
     path: "/register",
     name: "register",
     component: Register,
+  },
+  {
+    path: "/setting",
+    name: "setting",
+    component: CustomerSetting,
+  },
+  {
+    path: "/setting/addresses",
+    name: "Address List",
+    component: CustomerAddressList,
+  },
+  {
+    path: "/setting/profile",
+    name: "My Profile",
+    component: ProfileCustomer,
   },
 
   // Vendor
@@ -91,6 +116,39 @@ const routes = [
     path: "/add_product",
     name: "AddProducts",
     component: AddProductVendor,
+  },
+
+  // Affiliate
+  {
+    path: '/affiliate',
+    component: AffiliateDashboard,
+    children: [
+      {
+        path: '/dashboard',
+        name: 'AffiliateOverview',
+        component: AffiliateStats,
+      },
+      {
+        path: '/links',
+        name: 'AffiliateLinks',
+        component: AffiliateLinks,
+      },
+      {
+        path: '/stats',
+        name: 'AffiliateStats',
+        component: AffiliateStats,
+      },
+      {
+        path: '/settings',
+        name: 'AffiliateSettings',
+        component: AffiliateSettings,
+      },
+      {
+        path: '/notifications',
+        name: 'AffiliateNotifications',
+        component: AffiliateNotifications,
+      },
+    ],
   },
 
   // Admin

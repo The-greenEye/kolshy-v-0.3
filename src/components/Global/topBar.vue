@@ -39,22 +39,22 @@
         <!-- Account & Lists -->
         <div class="account-dropdown">
           <div class="dropdown-trigger">
-            <span class="account-greeting">Hello, {{ userData || "Sign in" }}</span>
+            <span class="account-greeting">Hello, {{ userData.name || "Sign in" }}</span>
             <span class="account-text">Account & Lists</span>
           </div>
           <div class="dropdown-content">
-            <div v-if="!userData">
+            <div v-if="!userData.name">
               <router-link to="/login" class="signin-btn">Sign in</router-link>
               <p class="new-customer">New customer? <router-link to="/register">Start here</router-link></p>
             </div>
             <div v-else>
-              <router-link v-if="!localStorage.vendor" to="/" class="dropdown-item">
+              <router-link v-if="userType === 'vendor'" to="/vendor_dashboard" class="dropdown-item">
                 <svg viewBox="0 0 24 24" width="20" height="20">
                   <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z" />
                 </svg>
                 Your Account
               </router-link>
-              <router-link v-else to="/" class="dropdown-item">
+              <router-link v-else to="/setting" class="dropdown-item">
                 <svg viewBox="0 0 24 24" width="20" height="20">
                   <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z" />
                 </svg>
@@ -164,65 +164,57 @@
 
     <!-- Mobile Navigation -->
     <div class="mobile-header">
-      <v-btn class="mobile-menu-btn" type="v-btn" data-bs-toggle="dropdown">
-        <svg viewBox="0 0 24 24" width="24" height="24">
-          <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
-        </svg>
-      </v-btn>
-      <div class="dropdown-menu">
-        <router-link to="/" class="dropdown-item">
-          <svg viewBox="0 0 24 24" width="20" height="20">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z" />
-          </svg>
-          Home
-        </router-link>
-        <router-link to="/shop" class="dropdown-item">
-          <svg viewBox="0 0 24 24" width="20" height="20">
-            <path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z" />
-          </svg>
-          Your Orders
-        </router-link>
-        <router-link to="/my-account" class="dropdown-item">
-          <svg viewBox="0 0 24 24" width="20" height="20">
-            <path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z" />
-          </svg>
-          My Account
+      <div class="d-flex align-items-center">
+        <i @click="visible = true" class="bi bi-list fs-3"></i>
+        <router-link to="/" class="mobile-logo">
+          <img src="https://kolshy.ae/wp-content/uploads/2025/02/Untitled-3000-x-750-px.gif" alt="Logo" />
         </router-link>
       </div>
-      <router-link to="/" class="mobile-logo">
-        <img src="https://kolshy.ae/wp-content/uploads/2025/02/Untitled-3000-x-750-px.gif" alt="Logo" />
-      </router-link>
-
-      <div class="mobile-cart">
-        <span class="cart-badge">{{ items.length }}</span>
-        <svg viewBox="0 0 24 24" width="24" height="24">
-          <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z" />
-        </svg>
+      <div class="d-flex">
+        <div v-if="userType && userType === 'vendor'">
+          <a href="../Vendor/setting/setting_profile.vue">Vendor Dashboard</a>
+        </div>
+        <div v-else-if="userType && userType === 'customer'" class="d-none"></div>
+        <div v-else>
+          <router-link to="/login" class="text-dark">Sign in ▶ <i class="bi bi-person fs-3"></i></router-link>
+        </div>
+        <div class="mobile-cart">
+          <span class="cart-badge">{{ items.length }}</span>
+          <svg viewBox="0 0 24 24" width="24" height="24">
+            <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z" />
+          </svg>
+        </div>
       </div>
+      <el-drawer size="80%" direction="ltr" v-model="visible" :show-close="false">
+        <template #header="{ close, titleId, titleClass }">
+          <h4 :id="titleId" :class="titleClass">{{ userData.name || "Sign in" }}</h4>
+          <el-button type="danger" @click="close">
+            <el-icon class="el-icon--left"><CircleCloseFilled /></el-icon>
+            Close
+          </el-button>
+        </template>
+        This is drawer content.
+      </el-drawer>
     </div>
   </div>
 </template>
 
 <script>
-import axios from "axios";
-import { useToast } from "vue-toastification";
-import { useStoreApp } from "../../stores/app"; // Adjust the path to your actual Pinia store file
-import { ArrowDown } from "@element-plus/icons-vue";
+import { useStoreCustomer, useStoreVendor } from "../../stores/app";
+
 export default {
   name: "KolshyStyleHeader",
   data() {
-    return {
+    return {      
+      customer: useStoreCustomer(),
+      vendor: useStoreVendor(),
       isCartOpen: false,
       items: [],
-      userData: "",
-      categories: [],
+      userData: [],
+      userType: "",
+      visible: false,
     };
   },
-  setup() {
-    const toast = useToast();
-    return { toast };
-  },
-
   computed: {
     cartTotal() {
       return this.items.reduce((total, item) => {
@@ -231,34 +223,13 @@ export default {
     },
   },
   methods: {
-    async fetchUserProfile() {
-      try {
-        const store = useStoreApp();
-        const token = localStorage.tokenkolshy;
-        if (!token) return;
-
-        const response = await axios.get(`${store.baseUrl}${store.endPoint.globel.profile.show_profile}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        if (response.data?.data) {
-          this.userData = response.data.data.name;
-        }
-      } catch (error) {
-        console.error("Profile fetch error:", error);
-      }
-    },
-
-    async fetchCategories() {
-      try {
-        const store = useStoreApp();
-        const response = await axios.get(`${store.baseUrl}${store.endPoint.admin.categories.get_all}`);
-
-        if (response.data?.data) {
-          this.categories = response.data.data;
-        }
-      } catch (error) {
-        console.error("Category fetch error:", error);
+    getData() {
+      if(localStorage.typeIs === "customer"){
+        this.userData = this.customer.data
+      }else if (localStorage.typeIs === "vendor"){
+        this.userData = this.vendor.data
+      }else {
+        this.userData = []
       }
     },
 
@@ -278,14 +249,13 @@ export default {
     removeFromCart(itemId) {
       this.items = this.items.filter((item) => item.id !== itemId);
       localStorage.setItem("cartItems", JSON.stringify(this.items));
-      this.toast.success("Item removed from cart");
+      this.alert.showAlert("Item removed from cart", "success");
     },
   },
 
   mounted() {
-    this.fetchUserProfile();
-    this.fetchCategories();
     this.getCartItems();
+    this.getData()
   },
 };
 </script>
@@ -744,7 +714,7 @@ export default {
 /* Mobile Header */
 .mobile-header {
   display: none;
-  background-color: #000336;
+  background-color: #ffffff;
   padding: 10px 15px;
   align-items: center;
   justify-content: space-between;
@@ -754,6 +724,10 @@ export default {
   background: none;
   border: none;
   padding: 5px;
+}
+
+.mobile-header i {
+  color: black;
 }
 
 .mobile-menu-btn svg {

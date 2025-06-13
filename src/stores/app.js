@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 
+// Basic EndPoint Api
 export const useStoreApp = defineStore("Api", {
   state: () => ({
     baseUrl: "https://back.kolshy.ae/api/",
@@ -97,15 +98,26 @@ export const useStoreApp = defineStore("Api", {
         },
       },
     },
-    vendor: {
-      profile: [],
-      products: [],
-    },
+  }),
+});
+
+// Customer Data
+export const useStoreCustomer = defineStore("Customer", {
+  state: () => ({
     customer: {
-      profile: [],
-      address: [],
-      carts: [],
-      favorit: [],
+      token: "",
+      data: [],
     },
   }),
 });
+
+//Vendor Data 
+export const useStoreVendor = defineStore; ("Vendor", {
+  state: () => ({
+    vendor: {
+      token: "",
+      data: [],
+    },
+  }),
+});
+

@@ -80,25 +80,19 @@ export default {
       };
       try {
         const fullUrl = this.api.baseUrl + this.api.endPoint.customer.auth.login;
-        console.log("Full API URL:", fullUrl); // Debugging: Log the full URL
         const res_log_in = await axios.post(fullUrl, userData);
 
         if (res_log_in.status === 200 || res_log_in.status === 201) {
           this.toast.success("Your Login Customer Successfully");
+          clocalStorage.setItem("typeIs", "customer")
           location.pathname = "/";
         }
       } catch (error) {
         // Debugging: Log error details for inspection
-        console.error("API Error:", error);
-
-        // Provide more detailed error messages
-        if (error.response) {
-          this.toast.error(`Error: ${error.response.data.message || error.response.statusText}`);
-        } else if (error.request) {
-          this.toast.error("No response received from the server.");
-        } else {
-          this.toast.error("Error in request configuration or other issue.");
-        }
+        const fullUrl = this.api.baseUrl + this.api.endPoint.seller.auth.login;
+        const res_log_in = await axios.post(fullUrl, userData);
+        clocalStorage.setItem("typeIs", "vendor")
+        location.pathname = "/";
       }
     },
   },

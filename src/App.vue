@@ -1,6 +1,6 @@
 <template>
   <div>
-    <router-view />
+  <router-view/>
     <div class="reload-screen">
       <img src="https://kolshy.ae/wp-content/uploads/2025/02/Untitled-3000-x-750-px.gif" class="img-fluid" alt="" />
     </div>
@@ -9,11 +9,17 @@
 
 <script>
 import KolshyStyleHeader from "@/components/Global/topBar"
+import { useStoreApp } from "./stores/app"; // Adjust the path to your actual Pinia store file
+
 export default {
   name: "App",
   components: {
     KolshyStyleHeader
-  }
+  },
+  setup(){
+    const store = useStoreApp();
+    return { store }
+  },
 }
 </script>
 
