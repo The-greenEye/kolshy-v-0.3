@@ -39,6 +39,51 @@ function saveSettings() {
 
 <style scoped>
 .affiliate-settings-card {
+  box-shadow: 0 4px 24px 0 #e5174222;
+  border-radius: 18px;
+  background: #fff;
+  animation: fadeIn 0.7s;
+}
+.card-header {
+  color: #e51742;
+  font-weight: bold;
+  font-size: 1.4rem;
+  letter-spacing: 1px;
+  margin-bottom: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.settings-form {
+  margin-top: 1rem;
+}
+.el-form-item {
+  margin-bottom: 1.2rem;
+}
+.el-button {
+  background: linear-gradient(90deg, #e51742 60%, #ff5e62 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  transition: transform 0.1s;
+}
+.el-button:active {
+  transform: scale(0.96);
+}
+.el-input {
+  border-radius: 8px;
+  box-shadow: 0 1px 4px #e5174211;
+  transition: box-shadow 0.2s;
+}
+.el-input:focus-within {
+  box-shadow: 0 2px 8px #e5174222;
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.affiliate-settings-card {
   max-width: 600px;
   margin: 0 auto;
 }

@@ -30,6 +30,38 @@ const notifications = ref([
 
 <style scoped>
 .affiliate-notifications-card {
+  box-shadow: 0 4px 24px 0 #e5174222;
+  border-radius: 18px;
+  background: #fff;
+  animation: fadeIn 0.7s;
+}
+.card-header {
+  color: #e51742;
+  font-weight: bold;
+  font-size: 1.4rem;
+  letter-spacing: 1px;
+  margin-bottom: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.el-timeline {
+  margin-top: 1.5rem;
+}
+.el-timeline-item {
+  background: #f9e6eb;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 8px #e5174211;
+  padding: 0.5rem 1rem;
+  animation: fadeIn 0.7s;
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.affiliate-notifications-card {
   max-width: 600px;
   margin: 0 auto;
 }

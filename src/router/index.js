@@ -27,11 +27,17 @@ import categoriesAdmin from "../components/Admin/setting/addCategories.vue";
 import collectionsAdmin from "../components/Admin/setting/collections.vue";
 
 // Affiliate system
-import AffiliateDashboard from '../components/Marketing/AffiliateDashboard.vue';
-import AffiliateLinks from '../components/Marketing/AffiliateLinks.vue';
-import AffiliateStats from '../components/Marketing/AffiliateStats.vue';
-import AffiliateSettings from '../components/Marketing/AffiliateSettings.vue';
-import AffiliateNotifications from '../components/Marketing/AffiliateNotifications.vue';
+import AffiliateDashboard from "../components/Marketing/AffiliateDashboard.vue";
+import AffiliateLinks from "../components/Marketing/AffiliateLinks.vue";
+import AffiliateStats from "../components/Marketing/AffiliateStats.vue";
+import AffiliateSettings from "../components/Marketing/AffiliateSettings.vue";
+import AffiliateNotifications from "../components/Marketing/AffiliateNotifications.vue";
+// Affiliate Auth
+const AffiliateRegister = () => import("../components/Marketing/AffiliateRegister.vue");
+const AffiliateLogin = () => import("../components/Marketing/AffiliateLogin.vue");
+const AffiliateForgotPassword = () => import("../components/Marketing/AffiliateForgotPassword.vue");
+import AffiliatePayouts from "../components/Marketing/AffiliatePayouts.vue";
+import AffiliateAdmin from "../components/Marketing/AffiliateAdmin.vue";
 
 const routes = [
   // User
@@ -120,38 +126,60 @@ const routes = [
 
   // Affiliate
   {
-    path: '/affiliate',
+    path: "/affiliate",
     component: AffiliateDashboard,
-    children: [
-      {
-        path: '/dashboard',
-        name: 'AffiliateOverview',
-        component: AffiliateStats,
-      },
-      {
-        path: '/links',
-        name: 'AffiliateLinks',
-        component: AffiliateLinks,
-      },
-      {
-        path: '/stats',
-        name: 'AffiliateStats',
-        component: AffiliateStats,
-      },
-      {
-        path: '/settings',
-        name: 'AffiliateSettings',
-        component: AffiliateSettings,
-      },
-      {
-        path: '/notifications',
-        name: 'AffiliateNotifications',
-        component: AffiliateNotifications,
-      },
-    ],
   },
-
-  // Admin
+  {
+    path: "/affiliate/dashboard",
+    name: "AffiliateOverview",
+    component: AffiliateStats,
+  },
+  {
+    path: "/affiliate/links",
+    name: "AffiliateLinks",
+    component: AffiliateLinks,
+  },
+  {
+    path: "/affiliate/stats",
+    name: "AffiliateStats",
+    component: AffiliateStats,
+  },
+  {
+    path: "/affiliate/settings",
+    name: "AffiliateSettings",
+    component: AffiliateSettings,
+  },
+  {
+    path: "/affiliate/notifications",
+    name: "AffiliateNotifications",
+    component: AffiliateNotifications,
+  },
+  {
+    path: "/affiliate/register",
+    name: "AffiliateRegister",
+    component: AffiliateRegister,
+  },
+  {
+    path: "/affiliate/login",
+    name: "AffiliateLogin",
+    component: AffiliateLogin,
+  },
+  {
+    path: "/affiliate/forgot-password",
+    name: "AffiliateForgotPassword",
+    component: AffiliateForgotPassword,
+  },
+  {
+    path: "/affiliate/payouts",
+    name: "AffiliatePayouts",
+    component: AffiliatePayouts,
+  },
+  {
+    path: "/affiliate/admin",
+    name: "AffiliateAdmin",
+    component: AffiliateAdmin,
+  },
+  //Admin
   {
     path: "/admin_login",
     name: "adminLogin",
@@ -177,6 +205,21 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
+});
+
+// Affiliate tracking: parse ref and channel from URL and save to localStorage
+router.beforeEach((to, from, next) => {
+  const refId = to.query.ref || to.query.tag;
+  const channel = to.query.channel;
+  if (refId) {
+    // Save affiliate ID
+    localStorage.setItem('affiliate_ref', refId);
+  }
+  if (channel) {
+    // Save channel/source
+    localStorage.setItem('affiliate_channel', channel);
+  }
+  next();
 });
 
 export default router;

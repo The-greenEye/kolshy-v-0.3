@@ -46,6 +46,54 @@ const history = ref([
 
 <style scoped>
 .affiliate-stats-card {
+  box-shadow: 0 4px 24px 0 #e5174222;
+  border-radius: 18px;
+  background: #fff;
+  animation: fadeIn 0.7s;
+}
+.card-header {
+  color: #e51742;
+  font-weight: bold;
+  font-size: 1.4rem;
+  letter-spacing: 1px;
+  margin-bottom: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.stats-row {
+  margin-bottom: 2rem;
+}
+.el-statistic {
+  background: #f9e6eb;
+  border-radius: 12px;
+  padding: 1rem 0.5rem;
+  box-shadow: 0 2px 8px #e5174211;
+  margin-bottom: 1rem;
+}
+.el-table {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px #e5174211;
+  overflow: hidden;
+}
+.el-table th {
+  background: #e517421a;
+  color: #e51742;
+  font-weight: 600;
+}
+.el-table tr {
+  transition: background 0.2s;
+}
+.el-table tr:hover {
+  background: #f9e6eb;
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.affiliate-stats-card {
   max-width: 900px;
   margin: 0 auto;
 }

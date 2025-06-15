@@ -81,6 +81,62 @@ function addLink() {
 
 <style scoped>
 .affiliate-links-card {
+  box-shadow: 0 4px 24px 0 #e5174222;
+  border-radius: 18px;
+  background: #fff;
+  animation: fadeIn 0.7s;
+}
+.card-header {
+  color: #e51742;
+  font-weight: bold;
+  font-size: 1.4rem;
+  letter-spacing: 1px;
+  margin-bottom: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.table-responsive .el-table {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px #e5174211;
+  overflow: hidden;
+}
+.el-table th {
+  background: #e517421a;
+  color: #e51742;
+  font-weight: 600;
+}
+.el-table tr {
+  transition: background 0.2s;
+}
+.el-table tr:hover {
+  background: #f9e6eb;
+}
+.el-button {
+  background: linear-gradient(90deg, #e51742 60%, #ff5e62 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  transition: transform 0.1s;
+}
+.el-button:active {
+  transform: scale(0.96);
+}
+.el-input {
+  border-radius: 8px;
+  box-shadow: 0 1px 4px #e5174211;
+  transition: box-shadow 0.2s;
+}
+.el-input:focus-within {
+  box-shadow: 0 2px 8px #e5174222;
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.affiliate-links-card {
   max-width: 900px;
   margin: 0 auto;
 }
