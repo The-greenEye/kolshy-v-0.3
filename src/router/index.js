@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
 
+// =====================
 // User routes
+// =====================
 import HomeView from "../views/HomeView.vue";
 import ForgetPass from "../views/Global/ForgetPass.vue";
 import SigninView from "../views/User/auth/LoginView.vue";
@@ -8,8 +10,13 @@ import Register from "../views/User/auth/RegisterView.vue";
 import CustomerSetting from "../views/User/setting/BasiceSetting.vue";
 import CustomerAddressList from "../components/User/setting/addAddress.vue";
 import ProfileCustomer from "../components/User/setting/profile.vue";
+import LoginSecurityCus from "../components/User/setting/login&security.vue";
+import YourOrders from "../components/User/setting/OrdersCustomer.vue";
+import YourPayments from "../components/User/setting/MyPayments.vue";
 
+// =====================
 // Vendor routes
+// =====================
 import RegisterSeller from "../components/Vendor/auth/registerSeller.vue";
 import SettingAccount from "../views/Vendor/setting/SettingProfile.vue";
 import LoginSecurity from "../components/Vendor/setting/profile/login_profile.vue";
@@ -19,6 +26,7 @@ import PaymentsVendor from "../components/Vendor/setting/profile/payments.vue";
 import SettingBuss from "../components/Vendor/setting/profile/setting_buss.vue";
 import productVendor from "../components/Vendor/setting/profile/products.vue";
 import AddProductVendor from "../components/Vendor/setting/profile/add_products.vue";
+// TODO: Add more vendor features/components imports here as needed (e.g., Coupons, Analytics, Support, etc.)
 
 // Admin routes
 import AdminLog from "../views/Admin/auth/LoginAdmin.vue";
@@ -32,12 +40,16 @@ import AffiliateLinks from "../components/Marketing/AffiliateLinks.vue";
 import AffiliateStats from "../components/Marketing/AffiliateStats.vue";
 import AffiliateSettings from "../components/Marketing/AffiliateSettings.vue";
 import AffiliateNotifications from "../components/Marketing/AffiliateNotifications.vue";
+
 // Affiliate Auth
 const AffiliateRegister = () => import("../components/Marketing/AffiliateRegister.vue");
 const AffiliateLogin = () => import("../components/Marketing/AffiliateLogin.vue");
 const AffiliateForgotPassword = () => import("../components/Marketing/AffiliateForgotPassword.vue");
 import AffiliatePayouts from "../components/Marketing/AffiliatePayouts.vue";
 import AffiliateAdmin from "../components/Marketing/AffiliateAdmin.vue";
+
+//Shop Page
+import ShopView from "../views/shop/ShopView.vue"
 
 const routes = [
   // User
@@ -75,6 +87,21 @@ const routes = [
     path: "/setting/profile",
     name: "My Profile",
     component: ProfileCustomer,
+  },
+  {
+    path: "/setting/login&security",
+    name: "My Login & Security",
+    component: LoginSecurityCus,
+  },
+  {
+    path: "/setting/orders",
+    name: "My Order",
+    component: YourOrders,
+  },
+  {
+    path: "/setting/mypayments",
+    name: "My Payments",
+    component: YourPayments,
   },
 
   // Vendor
@@ -199,6 +226,13 @@ const routes = [
     path: "/admin/collections",
     name: "Add Collections",
     component: collectionsAdmin,
+  },
+
+  //Shop
+  {
+    path: "/shop",
+    name: "Shop",
+    component: ShopView,
   },
 ];
 

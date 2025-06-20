@@ -110,7 +110,7 @@ import { useVuelidate } from "@vuelidate/core";
 import { required, email, minLength, sameAs } from "@vuelidate/validators";
 import axios from "axios";
 import { useToast } from "vue-toastification";
-import { useStoreApp, useStoreCustomer } from "@/stores/app";
+import { useStoreApp } from "../../../stores/app.js";
 import { useRouter } from "vue-router";
 
 export default {
@@ -120,7 +120,10 @@ export default {
       v$: useVuelidate(),
       toast: useToast(),
       api: useStoreApp(),
-      customer: useStoreCustomer(),
+      customer: {
+        "token": "",
+        "data": [],
+      },
       router: useRouter(),
     };
   },
@@ -176,7 +179,7 @@ export default {
 
       try {
         const fullApi = this.api.baseUrl + this.api.endPoint.customer.auth.register;
-        const response = await axios.post(fullApi, userData);
+        const response = await axios.post("https://back.kolshy.ae/api/customer/register", userData);
 
         if ([200, 201].includes(response.status)) {
           const token = response.data.data.token;

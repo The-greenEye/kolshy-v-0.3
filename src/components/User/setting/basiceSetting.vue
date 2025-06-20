@@ -38,11 +38,13 @@ export default {
     title: 'Login and Security',
     desc: 'Manage your password, email, mobile number, and security settings',
     icon: 'bi bi-shield-lock',
+    link: '/setting/login&security'
   },
   {
     title: 'Your requests',
     desc: 'Track, return or buy again items',
     icon: 'bi bi-box-seam',
+    link: '/setting/orders'
   },
   {
     title: 'Your messages',
@@ -53,6 +55,7 @@ export default {
     title: 'Your payments',
     desc: 'View all transactions, modify payment methods and settings',
     icon: 'bi bi-credit-card',
+    link: '/setting/mypayments'
   },
   {
     title: 'Gift cards',
