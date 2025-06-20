@@ -50,6 +50,7 @@ export default {
     title: 'Your messages',
     desc: 'Messages sent and received from Amazon, sellers, and buyers',
     icon: 'bi bi-envelope-paper',
+    link: '/setting/mymessages'
   },
   {
     title: 'Your payments',

@@ -13,6 +13,7 @@ import ProfileCustomer from "../components/User/setting/profile.vue";
 import LoginSecurityCus from "../components/User/setting/login&security.vue";
 import YourOrders from "../components/User/setting/OrdersCustomer.vue";
 import YourPayments from "../components/User/setting/MyPayments.vue";
+import YourMessages from "../components/User/setting/MyMessages.vue";
 
 // =====================
 // Vendor routes
@@ -102,6 +103,11 @@ const routes = [
     path: "/setting/mypayments",
     name: "My Payments",
     component: YourPayments,
+  },
+  {
+    path: "/setting/mymessages",
+    name: "My Messages",
+    component: YourMessages,
   },
 
   // Vendor
