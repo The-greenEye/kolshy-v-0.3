@@ -67,6 +67,10 @@ export default {
     return { toast, api: useStoreApp() };
   },
   methods: {
+    /**
+     * Submit the admin login form.
+     * Shows a success message on success, error message on failure.
+     */
     async submitForm() {
       const AdminData = {
         email_or_phone: this.user_name,
@@ -80,7 +84,11 @@ export default {
           location.pathname = "/admin";
         }
       } catch(err) {
-        this.toast.error("Error, You not have an account or, Your email/pass is wrong", err);
+        // Log error for debugging in development
+        if (process.env.NODE_ENV === 'development') {
+          console.error("Admin login error:", err);
+        }
+        this.toast.error("Login failed. Please check your credentials and try again.");
       }
     },
   },

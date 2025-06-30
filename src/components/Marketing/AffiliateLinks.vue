@@ -58,11 +58,19 @@ const links = ref([
 ]);
 const newLink = ref({ name: '', url: '' });
 
+/**
+ * Copy the given text to clipboard and show a success message.
+ * @param {string} text
+ */
 function copyToClipboard(text) {
   navigator.clipboard.writeText(text);
   ElMessage.success('Copied to clipboard!');
 }
 
+/**
+ * Add a new referral link to the list.
+ * Shows a warning if fields are empty.
+ */
 function addLink() {
   if (newLink.value.name && newLink.value.url) {
     let url = newLink.value.url;

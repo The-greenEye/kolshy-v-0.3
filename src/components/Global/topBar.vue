@@ -24,6 +24,10 @@
         </div>
 
         <div class="search-container">
+          <!-- Personal route link for user -->
+          <div v-if="userType" class="my-route-link d-none d-lg-block">
+            <router-link :to="myRoute" class="nav-item-link">{{ myRoute }}</router-link>
+          </div>
           <input type="text" placeholder="What are you looking for?" class="search-input" />
           <v-btn class="search-v-btn p-0">
             <svg viewBox="0 0 24 24" class="search-icon">
@@ -139,7 +143,8 @@
               </template>
             </el-dropdown>
           </li>
-          <li v-for="(category, index) in categories" :key="index" class="nav-item">
+          <li v-if="loadingCategories" class="nav-item"><el-spin size="small" /> Loading...</li>
+            <li v-for="(category, index) in categories" :key="index" class="nav-item">
             <router-link :to="`/shop?category=${category}`">{{ category }}</router-link>
           </li>
 
@@ -244,13 +249,22 @@ export default {
       vendor: useStoreVendor(),
       isCartOpen: false, // تأكد من وجود هذه الخاصية هنا ومفتاحها false في البداية
       items: [],
-      categories: ['Electronics', 'Books', 'Fashion', 'Home & Kitchen'], // يمكنك تحديث هذه القائمة من API
+      categories: ['Electronics', 'Books', 'Fashion', 'Home & Kitchen'],
+      loadingCategories: false, // يمكنك تحديث هذه القائمة من API
       userData: [],
       userType: localStorage.typeIs || "",
       visible: false,
     };
   },
   computed: {
+    /**
+     * Compute personal route based on user type.
+     */
+    myRoute() {
+      if (this.userType === 'vendor') return '/vendor_dashboard';
+      if (this.userType === 'customer') return '/setting';
+      return '/login';
+    },
     cartTotal() {
       return this.items.reduce((total, item) => {
         return total + item.price * (item.quantity || 1);
@@ -271,17 +285,26 @@ export default {
       }
     },
 
+    /**
+     * Fetch categories from the API and update the categories list.
+     */
     async getCategory() {
-     try {
-      const resCategories = await axios.get("https://fakestoreapi.com/products");
-       if ([200,201].includes(resCategories.status)) {
-      // قم بتغيير .categroy إلى .category إذا كان اسم الخاصية في الـ API هو category
-      const  category = resCategories.data.map((p) => p.category) 
-      this.categories = [...new Set(category)]
+      this.loadingCategories = true;
+      try {
+        const resCategories = await axios.get("https://fakestoreapi.com/products");
+        if ([200,201].includes(resCategories.status)) {
+          // قم بتغيير .categroy إلى .category إذا كان اسم الخاصية في الـ API هو category
+          const  category = resCategories.data.map((p) => p.category) 
+          this.categories = [...new Set(category)]
+        }
+      } catch (err) {
+        // Log error for debugging in development
+        if (process.env.NODE_ENV === 'development') {
+          console.error("Error fetching categories:", err);
+        }
+      } finally {
+        this.loadingCategories = false;
       }
-     } catch (err) {
-      console.error(err)
-     }
     },
 
     openCart() {
@@ -293,18 +316,24 @@ export default {
       this.isCartOpen = false;
     },
 
+    /**
+     * Load cart items from localStorage.
+     */
     getCartItems() {
       this.items = JSON.parse(localStorage.getItem("cartItems")) || [];
     },
 
+    /**
+     * Remove an item from the cart by its ID.
+     * @param {number|string} itemId
+     */
     removeFromCart(itemId) {
       this.items = this.items.filter((item) => item.id !== itemId);
       localStorage.setItem("cartItems", JSON.stringify(this.items));
       // تأكد أن this.alert موجودة أو قم بإزالتها
       // this.alert.showAlert("Item removed from cart", "success");
-    },
+  }
   },
-
   mounted() {
     this.getCartItems();
     this.getCategory();
@@ -314,6 +343,23 @@ export default {
 </script>
 
 <style>
+/* Personal route link styling */
+.my-route-link .nav-item-link {
+  color: #e51748;
+  font-weight: bold;
+  margin-left: 1rem;
+  text-decoration: none;
+}
+.my-route-link .nav-item-link:hover {
+  color: #ca2e52;
+}
+
+@media (max-width: 768px) {
+  .my-route-link {
+    display: none !important;
+  }
+}
+
 *::before,
 *::after {
   box-sizing: border-box;

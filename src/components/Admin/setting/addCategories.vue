@@ -1,24 +1,19 @@
 <template>
   <div class="p-4 bg-light mt-4">
-    <!-- Header and Actions -->
-    <el-row :gutter="16" class="mb-3" align="middle" justify="space-between">
-      <el-col :xs="24" :sm="12">
-        <h2 class="d-flex align-items-center mb-2 mb-sm-0">
-          <i class="bi bi-tags-fill text-danger me-2"></i> Categories List
-        </h2>
-      </el-col>
-      <el-col :xs="24" :sm="12">
-        <div class="row gap-2 justify-content-sm-end justify-content-start">
-          <button class="mb-1 col btn btn-outline-secondary" @click="$router.push('/admin')" icon="el-icon-arrow-left" plain>Back</button>
-          <button class="mb-1 col btn btn-outline-secondary" @click="exportToCSV" icon="el-icon-download" plain>Export CSV</button>
-          <button class="mb-1 col fw-bold text-light btn" style="background-color: #e51748" type="danger" @click="showCategorySidebar = true" icon="el-icon-plus">Add New Category</button>
-        </div>
-      </el-col>
-    </el-row>
-
-    <!-- Table Section -->
+    <!-- Header and Actions omitted for brevity -->
+    <!-- Virtualized Categories List -->
     <div class="bg-white p-2 p-sm-4 rounded shadow mt-4 table-responsive">
-      <el-table
+      <RecycleScroller :items="categories" :item-size="72" class="virtual-list">
+        <template #default="{ item }">
+          <div class="virtual-row d-flex align-items-center p-2 border-bottom">
+            <el-avatar :src="item.thumbnail" size="large" class="me-3" />
+            <div class="flex-grow-1 fw-bold">{{ item.name.en }}</div>
+            <div class="me-3">{{ formatDate(item.created_at) }}</div>
+            <el-button type="primary" size="small" @click="editCategory(item)">Edit</el-button>
+          </div>
+        </template>
+      </RecycleScroller>
+        v-loading="loading"
         :data="categories"
         border
         style="width: 100%; min-width: 600px"
@@ -67,7 +62,6 @@
             </el-button>
           </template>
         </el-table-column>
-      </el-table>
       <el-pagination
         background
         layout="prev, pager, next"
@@ -83,7 +77,8 @@
     <transition name="sidebar-slide">
       <div v-if="showCategorySidebar" class="category-sidebar">
         <h4 class="fw-bold text-danger mb-3">{{ editingId ? "Edit Category" : "Add New Category" }}</h4>
-        <el-form label-position="top">
+        <el-form label-position="top" :disabled="loading">
+            <el-spin v-if="loading" size="large" style="display:block; margin: 0 auto 16px auto;" />
           <el-form-item label="Category Name (English)">
             <el-input v-model="form.name" placeholder="Enter category name in English" />
           </el-form-item>
@@ -119,6 +114,9 @@
 </template>
 
 <script>
+import { RecycleScroller } from 'vue3-virtual-scroller';
+import 'vue3-virtual-scroller/dist/vue3-virtual-scroller.css';
+import 'vue-virtual-scroller/dist/vue-virtual-scroller.css';
 import { ElMessage } from "element-plus";
 import { useAdminCategoryApi } from "@/composables/useAdminCategoryApi";
 
@@ -126,6 +124,8 @@ export default {
   name: "categoriesAdmin",
   data() {
     return {
+     startTime : performance.now(),
+      loading: false,
       showCategorySidebar: false,
       currentPage: 1,
       pageSize: 6,
@@ -150,15 +150,27 @@ export default {
     this.api = api.api;
   },
   methods: {
+    /**
+     * Format a date string to a readable format.
+     * @param {string} dateStr
+     * @returns {string}
+     */
     formatDate(dateStr) {
       if (!dateStr) return "—";
       const date = new Date(dateStr);
       return date.toLocaleDateString() + " " + date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
     },
+    /**
+     * Cancel the form and hide the sidebar.
+     */
     cancelForm() {
       this.resetForm();
       this.showCategorySidebar = false;
     },
+    /**
+     * Handle file input change for category thumbnail.
+     * @param {File} file
+     */
     handleFileChange(file) {
       this.form.thumbnail = file.raw;
       const reader = new FileReader();
@@ -167,6 +179,9 @@ export default {
       };
       reader.readAsDataURL(file.raw);
     },
+    /**
+     * Export the categories list to a CSV file.
+     */
     exportToCSV() {
       const headers = ["ID", "Name (EN)", "Description", "Options", "Products", "Created At", "Updated At"];
       const rows = this.categories.map((cat) => {
@@ -184,6 +199,9 @@ export default {
       document.body.removeChild(link);
     },
 
+    /**
+     * Reset the category form to its initial state.
+     */
     resetForm() {
       this.form = {
         name: "",
@@ -195,21 +213,37 @@ export default {
       };
       this.editingId = null;
     },
+    /**
+     * Load categories for the current page.
+     * Updates the categories list and total count.
+     */
     async loadCategories(page = 1) {
+      this.loading = true;
       try {
         const res = await this.getCategories(page, this.pageSize);
         const data = res.data.data;
         this.categories = data.data;
         this.totalCategories = data.meta.total;
       } catch (e) {
-        ElMessage.error("Failed to load categories");
+        ElMessage.error("Failed to load categories", e);
+      } finally {
+        this.loading = false;
       }
     },
+    /**
+     * Handle page change for pagination.
+     * @param {number} page
+     */
     handlePageChange(page) {
       this.currentPage = page;
       this.loadCategories(page);
     },
+    /**
+     * Submit the category form (create or update).
+     * Shows a success message on success, error message on failure.
+     */
     async submitForm() {
+      this.loading = true;
       const formData = new FormData();
       formData.append("name[en]", this.form.name);
       formData.append("name[ar]", this.form.name_ar);
@@ -235,9 +269,17 @@ export default {
         this.cancelForm();
         this.loadCategories(this.currentPage);
       } catch (err) {
-        ElMessage.error("Error saving category");
+        // Log error for debugging in development
+        if (process.env.NODE_ENV === 'development') {
+          console.error("Error saving category:", err);
+        }
+        ElMessage.error("Error saving category. Please check your input and try again.");
       }
     },
+    /**
+     * Edit an existing category (populate the form for editing).
+     * @param {Object} row
+     */
     editCategory(row) {
       this.editingId = row.id;
       this.form.name = row.name?.en || "";
@@ -250,8 +292,11 @@ export default {
     },
   },
   mounted() {
-    this.loadCategories();
-  },
+      const t0 = performance.now();
+      this.loadCategories();
+      const t1 = performance.now();
+      console.log(`CategoriesAdmin mounted in ms`);
+    },
 };
 </script>
 

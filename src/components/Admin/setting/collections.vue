@@ -1,24 +1,23 @@
 <template>
   <div class="p-4 bg-light mt-4">
-    <!-- Header and Actions -->
-    <el-row :gutter="16" class="mb-3" align="middle" justify="space-between">
-      <el-col :xs="24" :sm="12">
-        <h2 class="d-flex align-items-center mb-2 mb-sm-0">
-          <i class="bi bi-collection-fill text-primary me-2"></i> Collections List
-        </h2>
-      </el-col>
-      <el-col :xs="24" :sm="12">
-        <div class="row gap-2 justify-content-sm-end justify-content-start">
-          <button class="mb-1 col btn btn-outline-secondary" @click="$router.push('/admin')">Back</button>
-          <button class="mb-1 col btn btn-outline-secondary" @click="exportToCSV">Export CSV</button>
-          <button class="mb-1 col fw-bold text-light btn" style="background-color: #007bff" @click="showCollectionSidebar = true">Add New Collection</button>
-        </div>
-      </el-col>
-    </el-row>
-
-    <!-- Table -->
+    <!-- Header and Actions omitted -->
+    <!-- Virtualized Collections List -->
     <div class="bg-white p-2 p-sm-4 rounded shadow mt-4 table-responsive">
-      <el-table :data="collections" border style="width: 100%" size="small" :header-cell-style="{ background: '#f5f7fa', color: '#333' }">
+      <RecycleScroller :items="collections" :item-size="72" class="virtual-list">
+        <template #default="{ item, index }" >
+          <div class="virtual-row d-flex align-items-center p-2 border-bottom" :key="index">
+            <el-avatar :src="item.thumbnail" size="large" class="me-3" />
+            <div class="flex-grow-1">
+              <div class="fw-bold">{{ item.name.en }}</div>
+              <div class="text-muted small">Products: {{ item.products_count }}</div>
+            </div>
+            <div class="me-3 small">{{ formatDate(item.created_at) }}</div>
+            <el-button type="primary" size="small" @click="editCollection(item)">Edit</el-button>
+            <el-button type="danger" size="small" @click="deleteCollection(item)">Delete</el-button>
+          </div>
+        </template>
+      </RecycleScroller>
+      <el-table :data="collections" border style="width: 100%" size="small" :header-cell-style="{ background: '#f5f7fa', color: '#333' }" v-loading="loading">
         <el-table-column type="selection" width="55" />
         <el-table-column label="Collection" min-width="200">
           <template #default="scope">
@@ -66,7 +65,8 @@
             </el-col>
           </el-row>
         </h4>
-        <el-form label-position="top">
+        <el-form label-position="top" :disabled="loading">
+            <el-spin v-if="loading" size="large" style="display:block; margin: 0 auto 16px auto;" />
           <el-form-item label="Collection Name (English)">
             <el-input v-model="form.name" placeholder="Enter name in English" />
           </el-form-item>
@@ -99,6 +99,9 @@
 </template>
 
 <script>
+import { RecycleScroller } from 'vue3-virtual-scroller';
+import 'vue3-virtual-scroller/dist/vue3-virtual-scroller.css';
+import 'vue-virtual-scroller/dist/vue-virtual-scroller.css';
 import { ref, reactive, onMounted } from 'vue';
 import { ElMessage } from 'element-plus';
 import { useAdminCategoryApi } from '@/composables/useAdminCategoryApi';
@@ -113,6 +116,7 @@ export default {
 
     // Reactive state
     const showCollectionSidebar = ref(false);
+    const loading = ref(false);
     const currentPage = ref(1);
     const pageSize = ref(6);
     const totalCollections = ref(0);
@@ -143,6 +147,9 @@ export default {
     };
 
     // Fetch categories for form select
+    /**
+     * Fetch categories for the form select dropdown.
+     */
     const fetchCategories = async () => {
       try {
         const res = await categoryApi.getCategories(1, 100);
@@ -150,8 +157,12 @@ export default {
         res.data.data.data.forEach((cat) => {
           categories[cat.id] = cat.name.en;
         });
-      } catch {
-        ElMessage.error('Failed to load categories');
+      } catch (err) {
+        // Log error for debugging in development
+        if (process.env.NODE_ENV === 'development') {
+          console.error("Error loading categories:", err);
+        }
+        ElMessage.error('Failed to load categories. Please try again later.');
       }
     };
 
@@ -160,14 +171,25 @@ export default {
     };
 
     // Load collections list
+    /**
+     * Load collections for the current page.
+     * Updates the collections list and total count.
+     */
     const loadCollections = async (page = 1) => {
+      loading.value = true;
       try {
         const res = await collectionApi.getCollections(page, pageSize.value);
         const data = res.data.data;
         collections.value = data.data;
         totalCollections.value = data.total;
-      } catch {
-        ElMessage.error('Failed to load collections');
+      } catch (err) {
+        // Log error for debugging in development
+        if (process.env.NODE_ENV === 'development') {
+          console.error("Error loading collections:", err);
+        }
+        ElMessage.error('Failed to load collections. Please try again later.');
+      } finally {
+        loading.value = false;
       }
     };
 
@@ -206,7 +228,12 @@ export default {
     };
 
     // Submit form (create or update)
+    /**
+     * Submit the collection form (create or update).
+     * Shows a success message on success, error message on failure.
+     */
     const submitForm = async () => {
+      loading.value = true;
       const formData = new FormData();
       formData.append('name[en]', form.name);
       formData.append('name[ar]', form.name_ar);
@@ -225,12 +252,22 @@ export default {
         }
         cancelForm();
         loadCollections(currentPage.value);
-      } catch {
-        ElMessage.error('Error saving collection');
+      } catch (err) {
+        // Log error for debugging in development
+        if (process.env.NODE_ENV === 'development') {
+          console.error("Error saving collection:", err);
+        }
+        ElMessage.error('Error saving collection. Please check your input and try again.');
+      } finally {
+        loading.value = false;
       }
     };
 
     // Edit existing collection
+    /**
+     * Edit an existing collection (populate the form for editing).
+     * @param {Object} row
+     */
     const editCollection = (row) => {
       editingId.value = row.id;
       form.name = row.name?.en || '';
@@ -244,17 +281,28 @@ export default {
     };
 
     // Delete existing collection
+    /**
+     * Delete an existing collection by row data.
+     * @param {Object} row
+     */
     const deleteCollection = async (row) => { 
       try {
         await collectionApi.deleteCollection(row.id);
         ElMessage.success('Collection deleted');
         loadCollections(currentPage.value);
-      } catch {
-        ElMessage.error('Error deleting collection');
+      } catch (err) {
+        // Log error for debugging in development
+        if (process.env.NODE_ENV === 'development') {
+          console.error("Error deleting collection:", err);
+        }
+        ElMessage.error('Error deleting collection. Please try again later.');
       }
     };
   
     // Export CSV same as before
+    /**
+     * Export the collections list to a CSV file.
+     */
     const exportToCSV = () => {
       const headers = ['ID', 'Name (EN)', 'Description', 'Products', 'Created At', 'Updated At'];
       const rows = collections.value.map((col) => [
@@ -279,6 +327,11 @@ export default {
 
     // On mount fetch initial data
     onMounted(() => {
+      const t0 = performance.now();
+      fetchCategories();
+      loadCollections();
+      const t1 = performance.now();
+      console.log(`CollectionsAdmin mounted in ms`);
       fetchCategories();
       loadCollections();
     });

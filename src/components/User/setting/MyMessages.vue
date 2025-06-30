@@ -45,7 +45,7 @@
   <script>
   import KolshyStyleHeader from '@/components/Global/topBar';
   import footerC from '@/components/Global/footer';
-  import { useStoreApp } from '../../../stores/app'; // تأكد من المسار الصحيح لـ useStoreApp
+  import { useStoreApp } from '../../../stores/app'; 
   import axios from 'axios';
   import { ElMessage } from 'element-plus';
   

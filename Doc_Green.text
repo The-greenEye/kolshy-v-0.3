@@ -1,0 +1,99 @@
+# kolshy-v-0.3 Project Documentation (Doc_Green)
+
+## 1. Project Setup & Startup
+- Prerequisites: Node.js (v14+), npm
+- Install dependencies:
+  ```bash
+  npm install
+  ```
+- Development server (hot-reload):
+  ```bash
+  npm run serve
+  ```
+- Production build:
+  ```bash
+  npm run build
+  ```
+
+## 2. Routes (src/router/index.js)
+User Routes:
+- `/` ➔ HomeView
+- `/login` ➔ LoginView (User)
+- `/register` ➔ RegisterView (User)
+- `/forget-password` ➔ ForgetPass
+- `/setting` ➔ BasiceSetting (Customer settings)
+- Customer sub-settings components: addAddress, profile, login&security, OrdersCustomer, MyPayments, MyMessages
+
+Vendor Routes:
+- `/vendor/register` ➔ registerSeller
+- `/vendor/setting` ➔ SettingProfile (Vendor)
+- Vendor sub-settings: login_profile, dashboard, orders, payments, setting_buss, products, add_products, add_payment_method
+
+Affiliate Routes:
+- `/affiliate` ➔ AffiliateDashboard
+- `/affiliate/login` ➔ AffiliateLogin
+- `/affiliate/register` ➔ AffiliateRegister
+- `/affiliate/forgot-password` ➔ AffiliateForgotPassword
+- `/affiliate/stats` ➔ AffiliateStats
+- `/affiliate/links` ➔ AffiliateLinks
+- `/affiliate/settings` ➔ AffiliateSettings
+- `/affiliate/notifications` ➔ AffiliateNotifications
+- `/affiliate/payouts` ➔ AffiliatePayouts
+- `/affiliate/admin` ➔ AffiliateAdmin
+
+Admin Routes:
+- `/admin/login` ➔ LoginAdmin
+- `/admin` ➔ HomeAdmin
+- `/admin/categories` ➔ addCategories
+- `/admin/collections` ➔ collections
+- `/admin/errors` ➔ ManagementErrorAdmin
+- `/admin/languages` ➔ AddLanguage
+- `/admin/products` ➔ AddProductAdmin
+- `/admin/users` ➔ UsersManagement
+
+Shop:
+- `/shop` ➔ ShopView
+
+## 3. Core Composables (src/composables)
+- useNavLinks.js ➔ manages navigation link definitions
+- useAdminCategoryApi.js ➔ API calls for admin categories
+- useAdminCollectionApi.js ➔ API calls for admin collections
+
+## 4. Main Views & Pages (src/views)
+- HomeView.vue (Landing page)
+- Global: ForgetPass.vue
+- User: RegisterView.vue, LoginView.vue, BasiceSetting.vue
+- Admin: LoginAdmin.vue, HomeAdmin.vue, ManagementErrorAdmin.vue
+- Shop: ShopView.vue
+- Vendor: SettingProfile.vue
+
+## 5. Key Components (src/components)
+- Admin components: AddProductAdmin, Manage Users, setting pages, content_management, products_manage
+- Marketing/Affiliate: AffiliateDashboard, AffiliateStats, AffiliateLinks, AffiliateSettings, AffiliateNotifications, AffiliatePayouts, AffiliateAdmin, AffiliateLogin, AffiliateRegister, AffiliateForgotPassword
+- User components: login.vue, register.vue, profile, MyMessages, OrdersCustomer, addAddress, MyPayments, login&security, basiceSetting
+- Vendor components: registerSeller, profile/settings (dashboard, orders, payments, products)
+- Global: footer.vue, topBar.vue, forgetpassword.vue
+
+## 6. Incomplete / TODO Items
+- AffiliateRegister.vue: connect form submit to backend API
+- AffiliateLogin.vue: connect login to backend authentication
+- AffiliateForgotPassword.vue: implement password-reset API call
+- AffiliateCommissionSettings.vue: save global/category/product rates to backend or store
+- products_manage.vue (Admin): implement editProduct and deleteProduct logic
+
+## 7. Current Status
+- Core UI scaffolding and routing completed
+- Basic form validation and demo success messages in place
+- API integrations not implemented (forms are demo-only)
+- Admin product/category creation UI exists, but editing & deletion unfinished
+
+## 8. Future / Backlog Items
+- Integrate real backend endpoints for authentication, registration, password reset
+- Persist affiliate commission settings in a store or via API
+- Complete CRUD for products and categories in Admin
+- Implement error handling and global notification store
+- Add unit/integration tests for core services and views
+- Internationalization (i18n) support
+
+---
+© green_eye

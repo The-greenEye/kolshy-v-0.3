@@ -175,6 +175,10 @@ const handleMenuSelect = (index) => {
   drawerVisible.value = false; // Close drawer on mobile after selection
 };
 
+/**
+ * Generate a referral link for the given product ID.
+ * Shows a success message on success, warning if input is empty.
+ */
 function generateLink() {
   if (productId.value) {
     referralLink.value = `https://kolshy.com/product/${productId.value}?ref=AFF123`;
@@ -184,11 +188,19 @@ function generateLink() {
   }
 }
 
+/**
+ * Copy the given text to clipboard and show a success message.
+ * @param {string} text
+ */
 function copyToClipboard(text) {
   navigator.clipboard.writeText(text);
   ElMessage.success('Copied to clipboard!');
 }
 
+/**
+ * Request a payout (demo only).
+ * Shows a success message if amount is valid, warning otherwise.
+ */
 function requestPayout() {
   if (payoutAmount.value && parseFloat(payoutAmount.value) > 0) {
     ElMessage.success('Payout request submitted! (Demo)');

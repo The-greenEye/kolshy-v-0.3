@@ -3,7 +3,7 @@
     <!-- Sidebar for desktop/tablet -->
     <el-aside
       v-show="!isMobile"
-      width="220px"
+      width="320px"
       class="admin-sidebar"
     >
       <div class="p-3">
@@ -19,7 +19,8 @@
           <el-menu-item
             v-for="(item, index) in menuItems"
             :key="index"
-            :index="item.text"
+            :index="item.link"
+            @click="activeView = item.text"
           >
             <i :class="item.icon + ' me-2'"></i>
             <span>{{ item.text }}</span>
@@ -27,7 +28,6 @@
         </el-menu>
         <div class="mt-4">
           <el-menu
-            :default-active="activeAdmin"
             class="el-menu-vertical-demo"
             @select="handleAdminSelect"
           >
@@ -67,10 +67,14 @@
 
       <!-- Main Content -->
       <el-main class="admin-main-content">
-        <BasicHome v-show="activeView === 'Dashboard'" />
-        <KolshyProduct v-show="activeView === 'Products'" class="mt-4" />
-        <contentManagement v-show="activeView === 'Content Management'" />
-        <!-- Add more components and v-show conditions as needed -->
+  <BasicHome v-show="activeView === 'Dashboard'" />
+  <KolshyProduct v-show="activeView === 'Products'" class="mt-4" />
+  <contentManagement v-show="activeView === 'Content Management'" />
+  <!-- New Admin views -->
+  <AddLanguage v-show="activeView === 'Languages'" />
+  <AddProductAdmin v-show="activeView === 'New Product'" />
+  <UsersManagement v-show="activeView === 'User Management'" />
+  <ManagementErrorAdmin v-show="activeView === 'Errors'" />
       </el-main>
 
       <!-- Bottom Nav for mobile -->
@@ -103,6 +107,10 @@ import { ref, onMounted, onBeforeUnmount } from "vue";
 import BasicHome from "./setting/basic_home";
 import KolshyProduct from "./setting/products_manage";
 import contentManagement from "./setting/content_management";
+import AddLanguage from "@/components/Admin/AddLanguage.vue";
+import AddProductAdmin from "@/components/Admin/AddProductAdmin.vue";
+import UsersManagement from "@/components/Admin/UsersManagement.vue";
+import ManagementErrorAdmin from "@/views/Admin/ManagementErrorAdmin.vue";
 
 export default {
   name: 'AdminDashboard',
@@ -110,6 +118,10 @@ export default {
     BasicHome,
     KolshyProduct,
     contentManagement,
+    AddLanguage,
+    AddProductAdmin,
+    UsersManagement,
+    ManagementErrorAdmin
   },
   setup() {
     const activeView = ref('Dashboard');
@@ -119,13 +131,16 @@ export default {
 
     const menuItems = [
       { icon: 'bi bi-grid-fill', text: 'Dashboard', textShort: 'Home' },
-      { icon: 'bi bi-people-fill', text: 'User', textShort: 'User' },
+      { icon: 'bi bi-people-fill', text: 'User Management', textShort: 'User' },
       { icon: 'bi bi-bag-fill', text: 'Products', textShort: 'Prod' },
       { icon: 'bi bi-cart-fill', text: 'Orders Management', textShort: 'Orders' },
       { icon: 'bi bi-file-earmark-text-fill', text: 'Content Management', textShort: 'Content' },
       { icon: 'bi bi-graph-up', text: 'Finance', textShort: 'Finance' },
       { icon: 'bi bi-bar-chart-fill', text: 'Insights', textShort: 'Stats' },
       { icon: 'bi bi-headset', text: 'Support & Complaints', textShort: 'Help' },
+      { icon: 'bi bi-translate', text: 'Languages', textShort: 'Lang' },
+      { icon: 'bi bi-plus-square-fill', text: 'New Product', textShort: 'Add Prod' },
+      { icon: 'bi bi-exclamation-circle-fill', text: 'Errors', textShort: 'Err' },
     ];
     const menuItemsAdmin = [
       { icon: "bi bi-bell-fill fs-5", text: "Notifications" },

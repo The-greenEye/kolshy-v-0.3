@@ -1,7 +1,8 @@
 <template>
   <div class="home-component-wrapper">
     <div class="main-slider-section d-lg-block d-none">
-      <el-carousel :interval="4000" type="card" height="500px"> <el-carousel-item v-for="(slide, index) in sliderHome" :key="index">
+      <el-carousel :interval="4000" height="500px"> 
+        <el-carousel-item v-for="(slide, index) in sliderHome" :key="index">
           <img :src="slide.image" class="d-block w-100 slider-img" alt="Slider" />
         </el-carousel-item>
       </el-carousel>
@@ -218,8 +219,8 @@ export default {
 <style>
 /* Global styles for the entire home component wrapper */
 .home-component-wrapper {
-  background-color: #eaeded; /* خلفية رمادية فاتحة مثل أمازون */
-  padding-bottom: 50px; /* حشوة سفلية لتوفير مساحة قبل الفوتر */
+  background-color: #eaeded; 
+  padding-bottom: 50px; 
 }
 
 /* Main Slider Section */

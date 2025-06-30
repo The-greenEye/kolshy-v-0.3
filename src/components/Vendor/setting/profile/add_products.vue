@@ -291,6 +291,10 @@ export default {
       this.form.imageUrls = [];
       this.form.images = [];
     },
+    /**
+     * Save or update the product using the form data.
+     * Shows a success message on success, error message on failure.
+     */
     async saveProduct() {
       this.isLoading = true;
       try {
@@ -354,8 +358,12 @@ export default {
 
         this.toast.success(id ? "Product updated successfully!" : "Product created successfully!");
       } catch (err) {
-        console.error("Product Save Error:", err);
-        this.toast.error("Failed to save product.");
+        // Log error for debugging in development
+        if (process.env.NODE_ENV === 'development') {
+          console.error("Product Save Error:", err);
+        }
+        // Show user-friendly error message
+        this.toast.error("Failed to save product. Please check your input and try again.");
       } finally {
         this.isLoading = false;
       }

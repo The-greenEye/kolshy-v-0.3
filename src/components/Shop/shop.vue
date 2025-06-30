@@ -94,24 +94,37 @@ export default {
     };
   },
   mounted() {
+    const perfStart = performance.now();
     this.loading = true;
-    fetch("https://fakestoreapi.com/products")
+    // Fetch product data from the fake store API
+      fetch("https://fakestoreapi.com/products")
       .then((res) => res.json())
       .then((data) => {
         this.items = data;
         this.loading = false;
       })
-      .catch(() => {
+      .catch((err) => {
+        // Log error for debugging in development
+        if (process.env.NODE_ENV === 'development') {
+          console.error("Error loading products:", err);
+        }
         this.items = [];
         this.loading = false;
+        // Show user-friendly error message (optional: use a toast or ElMessage)
+        // ElMessage.error('Failed to load products. Please try again later.');
       });
     this.checkDesktop();
     window.addEventListener("resize", this.checkDesktop);
+    const perfEnd = performance.now();
+    console.log(`ShopPage mounted in ms`);
   },
   beforeUnmount() {
     window.removeEventListener("resize", this.checkDesktop);
   },
   methods: {
+    /**
+     * Check if the current window size is desktop and update state.
+     */
     checkDesktop() {
       this.isDesktop = window.innerWidth >= 992;
       if (this.isDesktop) this.showFilter = false;

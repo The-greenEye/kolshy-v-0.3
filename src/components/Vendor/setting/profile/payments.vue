@@ -10,9 +10,8 @@ vue
       <div class="wallet-section">
         <h2>Cards &amp; accounts</h2>
         <div class="add-payment-method">
-          <div class="add-icon">+</div>
-          <a href="#" class="add-link">Add a payment method</a>
-        </div>
+            <el-button type="primary" icon="el-icon-plus" @click="$router.push('/add_payment_method')">Add a payment method</el-button>
+          </div>
       </div>
       <!-- Rewards & Balances -->
       <div class="wallet-section">
@@ -30,7 +29,7 @@ vue
     <div class="wallet-main">
       <div class="no-payment-methods">
         <p>You don't have any payment methods saved.</p>
-        <el-button type="warning" round>Add Payment Method</el-button>
+        <el-button type="primary" icon="el-icon-plus" @click="$router.push('/add_payment_method')">Add Payment Method</el-button>
       </div>
     </div>
     
